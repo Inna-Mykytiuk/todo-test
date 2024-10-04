@@ -2,7 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import todosRoutes from "./routes/todos-routes"; // Імпорт вашого файлу маршрутизації
+
+import todosRoutes from "./routes/todos-routes";
+import boardRoutes from "./routes/board-routes";
 
 dotenv.config();
 
@@ -17,6 +19,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", todosRoutes); // Маршрутизація до ваших маршрутів
+app.use("/api/todos", todosRoutes); // Route for todos
+app.use("/api/boards", boardRoutes); // Route for boards
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));

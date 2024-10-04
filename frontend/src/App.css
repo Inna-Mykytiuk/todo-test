@@ -1,0 +1,17 @@
+.board {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  width: 30%;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ddd;
+}

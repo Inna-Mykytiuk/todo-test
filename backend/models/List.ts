@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const listSchema = new mongoose.Schema({
   title: { type: String, required: true },
