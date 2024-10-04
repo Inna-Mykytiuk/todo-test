@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Board from "../models/Board";
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 export const getBoards = async (req: Request, res: Response) => {
   try {
@@ -102,7 +103,7 @@ export const addTaskToColumn = async (req: any, res: any) => {
     }
 
     // Create the new task and add it to the column
-    const newTask = { title, description };
+    const newTask = { id: uuidv4(), title, description };
     column.tasks.push(newTask);
     await board.save(); // Save the updated board
 
@@ -191,15 +192,14 @@ export const deleteTaskInColumn = async (req: any, res: any) => {
   const { boardId, columnId, taskId } = req.params;
 
   try {
-    // Validate ObjectId
+    // Validate ObjectId for board and column IDs only
     if (
       !mongoose.Types.ObjectId.isValid(boardId) ||
-      !mongoose.Types.ObjectId.isValid(columnId) ||
-      !mongoose.Types.ObjectId.isValid(taskId)
+      !mongoose.Types.ObjectId.isValid(columnId)
     ) {
       return res
         .status(400)
-        .json({ message: "Неправильний ID борду, колонки або задачі" });
+        .json({ message: "Неправильний ID борду або колонки" });
     }
 
     const board = await Board.findById(boardId);
@@ -212,9 +212,8 @@ export const deleteTaskInColumn = async (req: any, res: any) => {
       return res.status(404).json({ message: "Колонка не знайдена" });
     }
 
-    const taskIndex = column.tasks.findIndex(
-      (t) => t._id.toString() === taskId
-    );
+    // Use `taskId` directly as it's a UUID
+    const taskIndex = column.tasks.findIndex((t) => t.id === taskId);
     if (taskIndex === -1) {
       return res.status(404).json({ message: "Задача не знайдена" });
     }
