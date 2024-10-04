@@ -1,56 +1,181 @@
-// import { Request, Response } from "express";
-// import List from "../models/Task";
+import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
+import Board from "../models/Board";
 
-// export const getLists = async (req: Request, res: Response) => {
-//   try {
-//     const lists = await List.find();
-//     res.status(200).json(lists);
-//   } catch (error) {
-//     res.status(500).json({ message: "Помилка отримання даних" });
-//   }
-// };
+// Add task to column
+export const addTaskToColumn = async (req: any, res: any) => {
+  const { boardId, columnId } = req.params;
+  const { title, description } = req.body;
 
-// export const createList = async (req: Request, res: Response) => {
-//   const { title, description } = req.body;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(boardId)) {
+      return res.status(400).json({ message: "Неправильний ID борду" });
+    }
 
-//   try {
-//     const newList = new List({ title, description });
-//     await newList.save();
-//     res.status(201).json(newList);
-//   } catch (error) {
-//     res.status(500).json({ message: "Помилка створення списку" });
-//   }
-// };
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
 
-// export const updateList = async (req: any, res: any) => {
-//   const { id } = req.params;
-//   const { title, description } = req.body;
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
 
-//   try {
-//     const updatedList = await List.findByIdAndUpdate(
-//       id,
-//       { title, description },
-//       { new: true }
-//     );
-//     if (!updatedList) {
-//       return res.status(404).json({ message: "Список не знайдено" });
-//     }
-//     res.status(200).json(updatedList);
-//   } catch (error) {
-//     res.status(500).json({ message: "Помилка редагування списку" });
-//   }
-// };
+    const newTask = { id: uuidv4(), title, description };
+    column.tasks.push(newTask);
+    await board.save();
 
-// export const deleteList = async (req: any, res: any) => {
-//   const { id } = req.params;
+    res.status(201).json({ message: "Задача додана", task: newTask });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка додавання задачі" });
+  }
+};
 
-//   try {
-//     const deletedList = await List.findByIdAndDelete(id);
-//     if (!deletedList) {
-//       return res.status(404).json({ message: "Список не знайдено" });
-//     }
-//     res.status(200).json({ message: "Список успішно видалено" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Помилка видалення списку" });
-//   }
-// };
+// Get tasks in a column
+export const getTasksInColumn = async (req: any, res: any) => {
+  const { boardId, columnId } = req.params;
+
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(boardId) ||
+      !mongoose.Types.ObjectId.isValid(columnId)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Неправильний ID борду або колонки" });
+    }
+
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
+
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    res.status(200).json(column.tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Помилка отримання задач" });
+  }
+};
+
+// Update task in a column
+export const updateTaskInColumn = async (req: any, res: any) => {
+  const { boardId, columnId, taskId } = req.params;
+  const { title, description } = req.body;
+
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(boardId) ||
+      !mongoose.Types.ObjectId.isValid(columnId)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Неправильний ID борду або колонки" });
+    }
+
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
+
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    const task = column.tasks.find((t) => t.id === taskId);
+    if (!task) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+
+    task.title = title || task.title;
+    task.description = description || task.description;
+    await board.save();
+
+    res.status(200).json({ message: "Задача успішно оновлена", task });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка редагування задачі" });
+  }
+};
+
+// Delete task from a column
+export const deleteTaskInColumn = async (req: any, res: any) => {
+  const { boardId, columnId, taskId } = req.params;
+
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(boardId) ||
+      !mongoose.Types.ObjectId.isValid(columnId)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Неправильний ID борду або колонки" });
+    }
+
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
+
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    const taskIndex = column.tasks.findIndex((t) => t.id === taskId);
+    if (taskIndex === -1) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+
+    column.tasks.splice(taskIndex, 1);
+    await board.save();
+
+    res.status(200).json({ message: "Задача успішно видалена" });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка видалення задачі" });
+  }
+};
+
+export const moveTask = async (req: any, res: any) => {
+  const { boardId, sourceColumnId, destColumnId, taskId } = req.params;
+
+  try {
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
+
+    // Find the source and destination columns
+    const sourceColumn = board.columns.find(
+      (col) => col._id.toString() === sourceColumnId
+    );
+    const destColumn = board.columns.find(
+      (col) => col._id.toString() === destColumnId
+    );
+    if (!sourceColumn || !destColumn) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    // Find and remove the task from the source column
+    const taskIndex = sourceColumn.tasks.findIndex(
+      (task) => task.id === taskId
+    );
+    if (taskIndex === -1) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+    const [task] = sourceColumn.tasks.splice(taskIndex, 1);
+
+    // Add the task to the destination column
+    destColumn.tasks.push(task);
+
+    await board.save(); // Save the changes to the database
+
+    res.status(200).json({ message: "Задача переміщена" });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка переміщення задачі" });
+  }
+};

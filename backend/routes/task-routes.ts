@@ -5,7 +5,7 @@ import {
   updateTaskInColumn,
   deleteTaskInColumn,
   moveTask,
-} from "../controllers/board-controller";
+} from "../controllers/task-controller";
 
 const router = express.Router();
 
