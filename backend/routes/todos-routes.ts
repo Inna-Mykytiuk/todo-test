@@ -8,12 +8,12 @@ import {
 
 const router = express.Router();
 
-router.get("/todos", getLists);
+router.get("/", getLists);
 
-router.post("/todos", createList);
+router.post("/", createList);
 
-router.put("/todos/:id", updateList);
+router.put("/:id", updateList);
 
-router.delete("/todos/:id", deleteList);
+router.delete("/:id", deleteList);
 
 export default router;

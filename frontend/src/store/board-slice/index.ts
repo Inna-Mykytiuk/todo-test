@@ -2,11 +2,13 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface Task {
-  id: string;
-  name: string;
+  _id: string;
+  title: string;
+  description: string;
 }
 
 interface Column {
+  _id: string;
   title: string;
   tasks: Task[];
 }

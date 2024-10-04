@@ -35,7 +35,7 @@ const BoardList: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div>
         <h2>Create a New Board</h2>
         <input
@@ -44,7 +44,7 @@ const BoardList: React.FC = () => {
           value={boardName}
           onChange={(e) => setBoardName(e.target.value)}
         />
-        <button onClick={handleCreateBoard}>Create Board</button>
+        <button type="submit" onClick={handleCreateBoard}>Create Board</button>
       </div>
 
       {loading && <p>Loading...</p>}
@@ -61,8 +61,8 @@ const BoardList: React.FC = () => {
                   value={updatedName}
                   onChange={(e) => setUpdatedName(e.target.value)}
                 />
-                <button onClick={() => handleUpdateBoard(board._id)}>Save</button>
-                <button onClick={() => setIsEditing(null)}>Cancel</button>
+                <button type="button" onClick={() => handleUpdateBoard(board._id)}>Save</button>
+                <button type="button" onClick={() => setIsEditing(null)}>Cancel</button>
               </div>
             ) : (
               <div>
@@ -79,18 +79,6 @@ const BoardList: React.FC = () => {
                 <button onClick={() => handleDeleteBoard(board._id)}>Delete</button>
               </div>
             )}
-            <div className="columns">
-              {board.columns.map((column, index) => (
-                <div key={index} className="column">
-                  <h4>{column.title}</h4>
-                  <ul>
-                    {column.tasks.map((task) => (
-                      <li key={task.id}>{task.name}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
           </div>
         ))
       ) : (
