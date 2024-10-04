@@ -12,7 +12,6 @@ const BoardList: React.FC = () => {
   const [updatedName, setUpdatedName] = useState("");
   const [boardName, setBoardName] = useState("");
 
-
   useEffect(() => {
     dispatch(fetchBoards());
   }, [dispatch]);
@@ -20,26 +19,19 @@ const BoardList: React.FC = () => {
   const handleCreateBoard = async () => {
     if (boardName.trim()) {
       await dispatch(createBoard(boardName));
-      dispatch(fetchBoards());
       setBoardName("");
     }
   };
 
-  const handleClearInput = () => {
-    setBoardName("");
-  };
-
-  const handleUpdateBoard = (id: string) => {
+  const handleUpdateBoard = async (id: string) => {
     if (updatedName.trim()) {
-      dispatch(updateBoard({ id, name: updatedName }));
+      await dispatch(updateBoard({ id, name: updatedName }));
       setIsEditing(null);
     }
   };
 
-  const handleDeleteBoard = (id: string) => {
-    dispatch(deleteBoard(id)).then(() => {
-      dispatch(fetchBoards()); // Повторно завантажити дані
-    });
+  const handleDeleteBoard = async (id: string) => {
+    await dispatch(deleteBoard(id));
   };
 
   return (
@@ -53,16 +45,15 @@ const BoardList: React.FC = () => {
           onChange={(e) => setBoardName(e.target.value)}
         />
         <button onClick={handleCreateBoard}>Create Board</button>
-        <button onClick={handleClearInput}>Clear</button>
       </div>
 
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      {Array.isArray(boards) && boards.length > 0 ? (
+      {boards.length > 0 ? (
         boards.map((board) => (
-          <div key={board.id} className="board">
-            {isEditing === board.id ? (
+          <div key={board._id} className="board">
+            {isEditing === board._id ? (
               <div>
                 <input
                   placeholder="Enter board name"
@@ -76,7 +67,7 @@ const BoardList: React.FC = () => {
             ) : (
               <div>
                 <h3>{board.name}</h3>
-                <Link to={`/boards/${board.id}`}>View Details</Link> {/* Link to board details */}
+                <Link to={`/boards/${board._id}`}>View Details</Link>
                 <button
                   onClick={() => {
                     setIsEditing(board._id);
