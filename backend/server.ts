@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import boardRoutes from "./routes/board-routes";
-// import taskRoutes from "./routes/task-routes";
+import taskRoutes from "./routes/task-routes";
 
 dotenv.config();
 
@@ -20,6 +20,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/boards", boardRoutes);
-// app.use("/api/tasks", taskRoutes);
+app.use("/api/boards", taskRoutes);
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));

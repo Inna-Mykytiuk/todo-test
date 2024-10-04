@@ -151,15 +151,14 @@ export const updateTaskInColumn = async (req: any, res: any) => {
   const { title, description } = req.body;
 
   try {
-    // Validate ObjectId
+    // Перевірка валідності лише для ObjectId борду і колонки
     if (
       !mongoose.Types.ObjectId.isValid(boardId) ||
-      !mongoose.Types.ObjectId.isValid(columnId) ||
-      !mongoose.Types.ObjectId.isValid(taskId)
+      !mongoose.Types.ObjectId.isValid(columnId)
     ) {
       return res
         .status(400)
-        .json({ message: "Неправильний ID борду, колонки або задачі" });
+        .json({ message: "Неправильний ID борду або колонки" });
     }
 
     const board = await Board.findById(boardId);
@@ -172,12 +171,13 @@ export const updateTaskInColumn = async (req: any, res: any) => {
       return res.status(404).json({ message: "Колонка не знайдена" });
     }
 
-    const task = column.tasks.find((t) => t._id.toString() === taskId);
+    // Пошук завдання по UUID
+    const task = column.tasks.find((t) => t.id === taskId);
     if (!task) {
       return res.status(404).json({ message: "Задача не знайдена" });
     }
 
-    // Update the task's properties
+    // Оновлення полів задачі
     task.title = title || task.title;
     task.description = description || task.description;
     await board.save();
