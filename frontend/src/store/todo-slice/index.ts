@@ -5,6 +5,7 @@ export interface Todo {
   _id: string;
   title: string;
   description: string;
+  columnId: string; // Додаємо columnId
 }
 
 interface TodosState {
@@ -22,6 +23,7 @@ const initialState: TodosState = {
 
 const BASE_URL = "http://localhost:5000/api/todos";
 
+// Fetch todos from the server
 export const fetchTodos = createAsyncThunk<Todo[]>(
   "todos/fetchTodos",
   async () => {
@@ -30,14 +32,16 @@ export const fetchTodos = createAsyncThunk<Todo[]>(
   }
 );
 
+// Create a new todo
 export const createTodo = createAsyncThunk<
   Todo,
-  { title: string; description: string; columnId: string } // Додаємо columnId
+  { title: string; description: string; columnId: string }
 >("todos/createTodo", async (todo) => {
   const response = await axios.post(BASE_URL, todo);
   return response.data;
 });
 
+// Update an existing todo
 export const updateTodo = createAsyncThunk<
   Todo,
   { id: string; todo: { title: string; description: string } }
@@ -46,6 +50,7 @@ export const updateTodo = createAsyncThunk<
   return response.data;
 });
 
+// Delete a todo
 export const deleteTodo = createAsyncThunk<string, string>(
   "todos/deleteTodo",
   async (id) => {
@@ -54,29 +59,13 @@ export const deleteTodo = createAsyncThunk<string, string>(
   }
 );
 
-// Створення slice
+// Create slice
 const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    setTodos: (state, action: PayloadAction<Todo[]>) => {
-      state.todos = action.payload;
-    },
     clearError: (state) => {
       state.error = null;
-    },
-    updateLocalTodo: (
-      state,
-      action: PayloadAction<{ id: string; title: string; description: string }>
-    ) => {
-      const { id, title, description } = action.payload;
-      const index = state.todos.findIndex((todo) => todo._id === id);
-      if (index !== -1) {
-        state.todos[index] = { ...state.todos[index], title, description };
-      }
-    },
-    deleteLocalTodo: (state, action: PayloadAction<string>) => {
-      state.todos = state.todos.filter((todo) => todo._id !== action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -91,7 +80,7 @@ const todoSlice = createSlice({
       })
       .addCase(fetchTodos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Помилка завантаження даних";
+        state.error = action.error.message || "Error loading data";
       })
       .addCase(createTodo.fulfilled, (state, action: PayloadAction<Todo>) => {
         state.todos.push(action.payload);
@@ -111,7 +100,6 @@ const todoSlice = createSlice({
   },
 });
 
-export const { setTodos, clearError, updateLocalTodo, deleteLocalTodo } =
-  todoSlice.actions;
-
+// Export actions and reducer
+export const { clearError } = todoSlice.actions;
 export default todoSlice.reducer;

@@ -89,7 +89,7 @@ const boardSlice = createSlice({
       state.boards = action.payload;
     },
     clearBoardName: (state) => {
-      state.error = null; // Ви можете використовувати це для очищення помилок
+      state.error = null;
     },
     updateLocalBoard: (
       state,

@@ -7,14 +7,16 @@ import {
   createTodo,
   deleteTodo,
   updateTodo,
+  fetchTodos,
 } from '@/store/todo-slice';
-import { fetchBoards } from '@/store/board-slice';
 import Modal from './Modal';
+import Card from './Card';
 
 const BoardDetails: React.FC = () => {
   const { boardId } = useParams<{ boardId: string }>();
   const dispatch = useAppDispatch();
   const boards = useAppSelector((state: RootState) => state.boards.boards);
+  const todos = useAppSelector((state: RootState) => state.todos.todos);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -23,39 +25,33 @@ const BoardDetails: React.FC = () => {
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
 
-
   useEffect(() => {
-    const loadBoards = async () => {
-      await dispatch(fetchBoards());
+    const loadBoardsAndTodos = async () => {
+      await dispatch(fetchTodos());
       setLoading(false);
     };
 
-    loadBoards();
+    loadBoardsAndTodos();
   }, [dispatch]);
 
   const board = boards.find((b: Board) => b._id === boardId);
 
-  // Log boards whenever they change
-  useEffect(() => {
-    console.log('Current boards:', boards);
-  }, [boards]);
+  // const handleAddTask = () => {
+  //   if (newTaskName.trim() === '' || newTaskDescription.trim() === '' || !currentColumnId) return;
 
-  const handleAddTask = () => {
-    if (newTaskName.trim() === '' || newTaskDescription.trim() === '') return;
+  //   const newTask = { title: newTaskName, description: newTaskDescription, columnId: currentColumnId };
+  //   console.log("New Task:", newTask); // Додайте цей рядок
+  //   dispatch(createTodo(newTask));
+  //   resetModal();
+  // };
 
-    const newTask = {
-      title: newTaskName,
-      description: newTaskDescription,
-      columnId: currentColumnId!,
-    };
+  const handleAddTask = async () => {
+    if (newTaskName.trim() === '' || newTaskDescription.trim() === '' || !currentColumnId) return;
 
-    console.log('Creating task:', newTask); // Log the task being created
-
-    dispatch(createTodo(newTask)).then(() => {
-      // Log boards after adding a new task to confirm state update
-      console.log('Boards after task creation:', boards);
-    });
-
+    const newTask = { title: newTaskName, description: newTaskDescription, columnId: currentColumnId };
+    console.log("New Task:", newTask);
+    await dispatch(createTodo(newTask)); // Зробіть це асинхронно
+    await dispatch(fetchTodos()); // Додайте це, щоб оновити список задач
     resetModal();
   };
 
@@ -65,7 +61,7 @@ const BoardDetails: React.FC = () => {
   };
 
   const handleDeleteTask = (taskId: string) => {
-    dispatch(deleteTodo(taskId)); // Видалити завдання за ID
+    dispatch(deleteTodo(taskId));
   };
 
   const handleEditTask = (taskId: string, taskTitle: string, taskDescription: string) => {
@@ -111,12 +107,14 @@ const BoardDetails: React.FC = () => {
           <div key={column._id} className="column">
             <h4>{column.title}</h4>
             <ul>
-              {column.tasks.map((task) => (
-                <li key={task._id}>
-                  <span>{task.title}</span>
-                  <button onClick={() => handleEditTask(task._id, task.title, task.description)}>Edit</button>
-                  <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
-                </li>
+              {todos.filter(todo => todo.columnId === column._id).map((task) => (
+                <Card
+                  key={task._id}
+                  title={task.title}
+                  description={task.description}
+                  onEdit={() => handleEditTask(task._id, task.title, task.description)}
+                  onDelete={() => handleDeleteTask(task._id)}
+                />
               ))}
             </ul>
             <button onClick={() => handleOpenModal(column._id)}>+</button>

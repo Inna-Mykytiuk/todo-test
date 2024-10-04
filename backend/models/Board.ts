@@ -1,24 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface Column {
-  title: string;
-  tasks: string[];
-}
-
-export interface Board extends Document {
-  id: string;
-  name: string;
-  columns: Column[];
-}
-
 const columnSchema = new Schema({
+  _id: { type: Schema.Types.ObjectId, required: true, auto: true },
   title: { type: String, required: true },
-  tasks: [{ name: String }],
+  tasks: { type: Array, default: [] },
 });
 
-const boardSchema = new Schema<Board>({
+const boardSchema = new Schema({
   name: { type: String, required: true },
   columns: [columnSchema],
 });
 
-export default mongoose.model<Board>("Board", boardSchema);
+export default mongoose.model("Board", boardSchema);

@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import todosRoutes from "./routes/todos-routes";
 import boardRoutes from "./routes/board-routes";
+// import taskRoutes from "./routes/task-routes";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/todos", todosRoutes);
 app.use("/api/boards", boardRoutes);
+// app.use("/api/tasks", taskRoutes);
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
