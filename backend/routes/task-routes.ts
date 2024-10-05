@@ -5,6 +5,7 @@ import {
   updateTaskInColumn,
   deleteTaskInColumn,
   moveTask,
+  moveTaskWithinColumn,
 } from "../controllers/task-controller";
 
 const router = express.Router();
@@ -16,6 +17,10 @@ router.delete("/:boardId/columns/:columnId/tasks/:taskId", deleteTaskInColumn);
 router.put(
   "/:boardId/columns/:sourceColumnId/tasks/:taskId/move/:destColumnId",
   moveTask
+);
+router.put(
+  "/:boardId/columns/:columnId/tasks/:taskId/move/:targetIndex",
+  moveTaskWithinColumn
 );
 
 export default router;

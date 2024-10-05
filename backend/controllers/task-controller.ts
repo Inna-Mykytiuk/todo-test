@@ -182,3 +182,45 @@ export const moveTask = async (req: any, res: any) => {
     res.status(500).json({ message: "Помилка переміщення задачі" });
   }
 };
+
+// Move task within a column
+export const moveTaskWithinColumn = async (req: any, res: any) => {
+  const { boardId, columnId, taskId, targetIndex } = req.params;
+
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(boardId) ||
+      !mongoose.Types.ObjectId.isValid(columnId)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Неправильний ID борду або колонки" });
+    }
+
+    const board = await Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Борд не знайдено" });
+    }
+
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    const taskIndex = column.tasks.findIndex((t) => t.id === taskId);
+    if (taskIndex === -1) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+
+    const [task] = column.tasks.splice(taskIndex, 1); // Вилучаємо завдання з початкової позиції
+    column.tasks.splice(targetIndex, 0, task); // Додаємо завдання на нову позицію
+
+    await board.save();
+
+    res
+      .status(200)
+      .json({ message: "Задача переміщена в межах колонки", task });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка переміщення задачі" });
+  }
+};
