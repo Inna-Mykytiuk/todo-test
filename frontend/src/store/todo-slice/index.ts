@@ -183,25 +183,10 @@ export const moveTaskWithinColumn = createAsyncThunk(
     taskId: string;
     targetIndex: number;
   }) => {
-    try {
-      console.log("Move Task Within Column:", {
-        boardId,
-        columnId,
-        taskId,
-        targetIndex,
-      });
-
-      const response = await axios.put(
-        `http://localhost:5000/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
-      );
-
-      console.log("Response Data:", response.data); // Логуємо відповідь від сервера
-
-      return response.data; // Повертаємо дані, які будуть використані у редюсері
-    } catch (error) {
-      console.error("Error moving task within column:", error); // Логування помилки
-      throw error; // Перевірка на помилку
-    }
+    const response = await axios.put(
+      `http://localhost:5000/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
+    );
+    return response.data; // Повертаємо дані, які будуть використані у редюсері
   }
 );
 

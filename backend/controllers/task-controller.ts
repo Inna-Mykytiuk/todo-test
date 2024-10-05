@@ -65,46 +65,6 @@ export const getTasksInColumn = async (req: any, res: any) => {
   }
 };
 
-// Update task in a column
-export const updateTaskInColumn = async (req: any, res: any) => {
-  const { boardId, columnId, taskId } = req.params;
-  const { title, description } = req.body;
-
-  try {
-    if (
-      !mongoose.Types.ObjectId.isValid(boardId) ||
-      !mongoose.Types.ObjectId.isValid(columnId)
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Неправильний ID борду або колонки" });
-    }
-
-    const board = await Board.findById(boardId);
-    if (!board) {
-      return res.status(404).json({ message: "Борд не знайдено" });
-    }
-
-    const column = board.columns.find((col) => col._id.toString() === columnId);
-    if (!column) {
-      return res.status(404).json({ message: "Колонка не знайдена" });
-    }
-
-    const task = column.tasks.find((t) => t.id === taskId);
-    if (!task) {
-      return res.status(404).json({ message: "Задача не знайдена" });
-    }
-
-    task.title = title || task.title;
-    task.description = description || task.description;
-    await board.save();
-
-    res.status(200).json({ message: "Задача успішно оновлена", task });
-  } catch (error) {
-    res.status(500).json({ message: "Помилка редагування задачі" });
-  }
-};
-
 // Delete task from a column
 export const deleteTaskInColumn = async (req: any, res: any) => {
   const { boardId, columnId, taskId } = req.params;
@@ -140,6 +100,60 @@ export const deleteTaskInColumn = async (req: any, res: any) => {
     res.status(200).json({ message: "Задача успішно видалена" });
   } catch (error) {
     res.status(500).json({ message: "Помилка видалення задачі" });
+  }
+};
+
+// Update task in a column
+// Update task in a column
+export const updateTaskInColumn = async (req: any, res: any) => {
+  const { boardId, columnId, taskId } = req.params;
+  const { title, description } = req.body;
+
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(boardId) ||
+      !mongoose.Types.ObjectId.isValid(columnId)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Неправильний ID борду або колонки" });
+    }
+
+    const board = await Board.findOneAndUpdate(
+      { _id: boardId, "columns._id": columnId, "columns.tasks.id": taskId },
+      {
+        $set: {
+          "columns.$.tasks.$[task].title": title,
+          "columns.$.tasks.$[task].description": description,
+        },
+      },
+      {
+        arrayFilters: [{ "task.id": taskId }],
+        new: true,
+      }
+    );
+
+    if (!board) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+
+    // Знаходимо колонку
+    const column = board.columns.find((col) => col._id.toString() === columnId);
+
+    if (!column) {
+      return res.status(404).json({ message: "Колонка не знайдена" });
+    }
+
+    // Знаходимо задачу в колонці
+    const task = column.tasks.find((t) => t.id === taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: "Задача не знайдена" });
+    }
+
+    res.status(200).json({ message: "Задача успішно оновлена", task });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка редагування задачі" });
   }
 };
 
