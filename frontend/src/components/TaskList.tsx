@@ -5,7 +5,7 @@ import { selectColumnTasks, addTask } from "../store/todo-slice";
 import type { RootState, AppDispatch } from "../store/store";
 import type { Task } from "../store/todo-slice";
 import Modal from './Modal';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 
 interface TaskListProps {
   boardId: string;

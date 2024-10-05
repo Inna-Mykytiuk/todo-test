@@ -7,7 +7,7 @@ import { Board } from '../store/board-slice';
 import TaskList from './TaskList';
 import Modal from './Modal';
 import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
