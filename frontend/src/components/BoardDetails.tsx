@@ -13,6 +13,7 @@ export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
   const { boardId } = useParams<{ boardId: string }>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [localBoards, setLocalBoards] = useState<Board[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
