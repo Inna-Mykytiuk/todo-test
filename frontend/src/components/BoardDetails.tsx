@@ -6,7 +6,7 @@ import type { RootState, AppDispatch } from "../store/store";
 import { Board } from '../store/board-slice';
 import TaskList from './TaskList';
 import Modal from './Modal';
-import { addTask, moveTask as moveTaskAction, updateTaskPosition, fetchTasks } from '../store/todo-slice';
+import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 export default function BoardDetails() {
@@ -60,15 +60,17 @@ export default function BoardDetails() {
       return;
     }
 
-    // console.log("Drag result:", result); 
+    // Логування результату перетягування
+    console.log("Drag result:", result);
 
     if (destination.droppableId === source.droppableId) {
       // Переміщення в межах однієї колонки
       const columnId = destination.droppableId;
       const taskId = result.draggableId;
 
-      // Виклик функції оновлення позиції задачі
-      await dispatch(updateTaskPosition({ boardId, columnId, taskId, newIndex: destination.index }));
+      // Виклик функції переміщення таски всередині колонки
+      await dispatch(moveTaskWithinColumn({ boardId, columnId, taskId, targetIndex: destination.index }));
+      console.log(`Таска ${taskId} переміщена в колонці ${columnId} на позицію ${destination.index}`);
     } else {
       // Переміщення між колонками
       const sourceColumnId = source.droppableId;

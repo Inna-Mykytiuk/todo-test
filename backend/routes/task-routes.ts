@@ -19,7 +19,7 @@ router.put(
   moveTask
 );
 router.put(
-  "/:boardId/columns/:columnId/tasks/:taskId/move/:targetIndex",
+  "/:boardId/:columnId/tasks/:taskId/move/:targetIndex",
   moveTaskWithinColumn
 );
 

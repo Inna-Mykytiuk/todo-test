@@ -170,6 +170,41 @@ export const updateTaskPosition = createAsyncThunk(
   }
 );
 
+export const moveTaskWithinColumn = createAsyncThunk(
+  "todo/moveTaskWithinColumn",
+  async ({
+    boardId,
+    columnId,
+    taskId,
+    targetIndex,
+  }: {
+    boardId: string;
+    columnId: string;
+    taskId: string;
+    targetIndex: number;
+  }) => {
+    try {
+      console.log("Move Task Within Column:", {
+        boardId,
+        columnId,
+        taskId,
+        targetIndex,
+      });
+
+      const response = await axios.put(
+        `http://localhost:5000/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
+      );
+
+      console.log("Response Data:", response.data); // Логуємо відповідь від сервера
+
+      return response.data; // Повертаємо дані, які будуть використані у редюсері
+    } catch (error) {
+      console.error("Error moving task within column:", error); // Логування помилки
+      throw error; // Перевірка на помилку
+    }
+  }
+);
+
 const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -242,6 +277,20 @@ const todoSlice = createSlice({
             (t) => t.id !== task.id
           );
           destColumn.tasks.push(task);
+        }
+      })
+      .addCase(moveTaskWithinColumn.fulfilled, (state, action) => {
+        const { columnId, task } = action.payload;
+        const column = state.columns.find((col) => col.id === columnId);
+
+        if (column) {
+          const taskIndex = column.tasks.findIndex((t) => t.id === task.id);
+          if (taskIndex !== -1) {
+            // Вилучаємо задачу з початкової позиції
+            column.tasks.splice(taskIndex, 1);
+            // Додаємо задачу на нову позицію
+            column.tasks.splice(action.payload.targetIndex, 0, task);
+          }
         }
       })
       .addCase(updateTaskPosition.fulfilled, (state, action) => {
