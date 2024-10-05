@@ -131,30 +131,42 @@ export const deleteTask = createAsyncThunk(
 
 export const moveTask = createAsyncThunk(
   "todo/moveTask",
-  async (
-    {
-      boardId,
-      sourceColumnId,
-      destColumnId,
-      taskId,
-    }: {
-      boardId: string;
-      sourceColumnId: string;
-      destColumnId: string;
-      taskId: string;
-    },
-    thunkAPI
-  ) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:5000/api/boards/${boardId}/columns/moveTask`,
-        { sourceColumnId, destColumnId, taskId }
-      );
-      return { sourceColumnId, destColumnId, task: response.data.task };
-    } catch (error) {
-      console.error(error);
-      return thunkAPI.rejectWithValue("Не вдалося перемістити задачу");
-    }
+  async ({
+    boardId,
+    sourceColumnId,
+    taskId,
+    destColumnId,
+  }: {
+    boardId: string;
+    sourceColumnId: string;
+    taskId: string;
+    destColumnId: string;
+  }) => {
+    const response = await axios.put(
+      `http://localhost:5000/api/boards/${boardId}/columns/${sourceColumnId}/tasks/${taskId}/move/${destColumnId}`
+    );
+    return response.data;
+  }
+);
+
+export const updateTaskPosition = createAsyncThunk(
+  "todo/updateTaskPosition",
+  async ({
+    boardId,
+    columnId,
+    taskId,
+    newIndex,
+  }: {
+    boardId: string;
+    columnId: string;
+    taskId: string;
+    newIndex: number;
+  }) => {
+    const response = await axios.put(
+      `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}/position`,
+      { newIndex }
+    );
+    return response.data;
   }
 );
 
@@ -230,6 +242,20 @@ const todoSlice = createSlice({
             (t) => t.id !== task.id
           );
           destColumn.tasks.push(task);
+        }
+      })
+      .addCase(updateTaskPosition.fulfilled, (state, action) => {
+        const { columnId, taskId } = action.payload;
+        const column = state.columns.find((col) => col.id === columnId);
+
+        if (column) {
+          const taskIndex = column.tasks.findIndex(
+            (task) => task.id === taskId
+          );
+          if (taskIndex !== -1) {
+            const [task] = column.tasks.splice(taskIndex, 1);
+            column.tasks.splice(action.payload.newIndex, 0, task);
+          }
         }
       });
   },

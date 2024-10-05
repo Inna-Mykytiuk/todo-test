@@ -6,19 +6,19 @@ import type { RootState, AppDispatch } from "../store/store";
 import { Board } from '../store/board-slice';
 import TaskList from './TaskList';
 import Modal from './Modal';
-import { addTask } from '../store/todo-slice';
+import { addTask, moveTask as moveTaskAction, updateTaskPosition, fetchTasks } from '../store/todo-slice';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
   const { boardId } = useParams<{ boardId: string }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [localBoards, setLocalBoards] = useState<Board[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
 
   const board = useSelector((state: RootState) =>
-    state.boards.boards.find((b) => b._id === boardId)
+    state.boards.boards.find((b: Board) => b._id === boardId)
   );
 
   useEffect(() => {
@@ -49,19 +49,56 @@ export default function BoardDetails() {
     if (currentColumnId) {
       await dispatch(addTask({ boardId, columnId: currentColumnId, title, description }));
     }
+    handleCloseModal();
+  };
+
+  const onDragEnd = async (result: DropResult) => {
+    const { destination, source } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    // console.log("Drag result:", result); 
+
+    if (destination.droppableId === source.droppableId) {
+      // Переміщення в межах однієї колонки
+      const columnId = destination.droppableId;
+      const taskId = result.draggableId;
+
+      // Виклик функції оновлення позиції задачі
+      await dispatch(updateTaskPosition({ boardId, columnId, taskId, newIndex: destination.index }));
+    } else {
+      // Переміщення між колонками
+      const sourceColumnId = source.droppableId;
+      const destColumnId = destination.droppableId;
+      const taskId = result.draggableId;
+
+      // Виклик функції переміщення задачі
+      await dispatch(moveTaskAction({ boardId, sourceColumnId, destColumnId, taskId }));
+    }
+
+    // Отримуємо нові задачі для кожної колонки
+    await Promise.all(
+      board.columns.map((column) =>
+        dispatch(fetchTasks({ boardId, columnId: column._id }))
+      )
+    );
   };
 
   return (
-    <div>
-      <h1>{board.name} - Деталі</h1>
-      {board.columns.map((column) => (
-        <div key={column._id}>
-          <h2>{column.title}</h2>
-          <button type="button" onClick={() => handleOpenModal(column._id)}>+ Add Task</button>
-          <TaskList boardId={boardId} columnId={column._id} />
-        </div>
-      ))}
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div>
+        <h1>{board.name} - Деталі</h1>
+        {board.columns.map((column) => (
+          <div key={column._id}>
+            <h2>{column.title}</h2>
+            <button type="button" onClick={() => handleOpenModal(column._id)}>+ Додати задачу</button>
+            <TaskList columnId={column._id} boardId={boardId} />
+          </div>
+        ))}
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
+      </div>
+    </DragDropContext>
   );
 }
