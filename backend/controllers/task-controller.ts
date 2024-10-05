@@ -34,6 +34,9 @@ export const addTaskToColumn = async (req: any, res: any) => {
 
 // Get tasks in a column
 export const getTasksInColumn = async (req: any, res: any) => {
+  // console.log(
+  //   `Fetching tasks for Board ID: ${req.params.boardId}, Column ID: ${req.params.columnId}`
+  // );
   const { boardId, columnId } = req.params;
 
   try {

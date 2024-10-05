@@ -1,5 +1,4 @@
-// Card.tsx
-import React from 'react';
+import React from "react";
 
 interface TaskProps {
   title: string;
@@ -10,13 +9,14 @@ interface TaskProps {
 
 const Card: React.FC<TaskProps> = ({ title, description, onEdit, onDelete }) => {
   return (
-    <li>
-      <span>{title}</span>
+    <div className="card">
+      <h3>{title}</h3>
       <p>{description}</p>
       <button onClick={onEdit}>Edit</button>
       <button onClick={onDelete}>Delete</button>
-    </li>
+    </div>
   );
 };
 
 export default Card;
+

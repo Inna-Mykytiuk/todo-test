@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBoards, createBoard, updateBoard, deleteBoard } from "../store/board-slice";
+import {
+  fetchBoards,
+  createBoard,
+  updateBoard,
+  deleteBoard,
+} from "../store/board-slice";
 import type { RootState, AppDispatch } from "../store/store";
 import { Link } from "react-router-dom";
 
+
 const BoardList: React.FC = () => {
-  const { boards, loading, error } = useSelector((state: RootState) => state.boards);
+  const { boards, loading, error } = useSelector(
+    (state: RootState) => state.boards
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [updatedName, setUpdatedName] = useState("");
   const [boardName, setBoardName] = useState("");
+
 
   useEffect(() => {
     dispatch(fetchBoards());
@@ -34,6 +43,7 @@ const BoardList: React.FC = () => {
     await dispatch(deleteBoard(id));
   };
 
+
   return (
     <div className="container">
       <div>
@@ -44,7 +54,9 @@ const BoardList: React.FC = () => {
           value={boardName}
           onChange={(e) => setBoardName(e.target.value)}
         />
-        <button type="submit" onClick={handleCreateBoard}>Create Board</button>
+        <button type="submit" onClick={handleCreateBoard}>
+          Create Board
+        </button>
       </div>
 
       {loading && <p>Loading...</p>}
@@ -61,8 +73,12 @@ const BoardList: React.FC = () => {
                   value={updatedName}
                   onChange={(e) => setUpdatedName(e.target.value)}
                 />
-                <button type="button" onClick={() => handleUpdateBoard(board._id)}>Save</button>
-                <button type="button" onClick={() => setIsEditing(null)}>Cancel</button>
+                <button type="button" onClick={() => handleUpdateBoard(board._id)}>
+                  Save
+                </button>
+                <button type="button" onClick={() => setIsEditing(null)}>
+                  Cancel
+                </button>
               </div>
             ) : (
               <div>
@@ -76,9 +92,28 @@ const BoardList: React.FC = () => {
                 >
                   Edit
                 </button>
-                <button onClick={() => handleDeleteBoard(board._id)}>Delete</button>
+                <button onClick={() => handleDeleteBoard(board._id)}>
+                  Delete
+                </button>
               </div>
             )}
+
+            {/* New block to display columns and tasks */}
+            <div className="columns">
+              {board.columns.map((column) => (
+                <div key={column._id} className="column">
+                  <h4>{column.title}</h4>
+                  <ul>
+                    {column.tasks.map((task) => (
+                      <li key={`${task._id}-${task.title}`}>
+                        <h5>{task.title}</h5>
+                        <p>{task.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         ))
       ) : (
