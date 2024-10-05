@@ -97,23 +97,6 @@ const BoardList: React.FC = () => {
                 </button>
               </div>
             )}
-
-            {/* New block to display columns and tasks */}
-            <div className="columns">
-              {board.columns.map((column) => (
-                <div key={column._id} className="column">
-                  <h4>{column.title}</h4>
-                  <ul>
-                    {column.tasks.map((task) => (
-                      <li key={`${task._id}-${task.title}`}>
-                        <h5>{task.title}</h5>
-                        <p>{task.description}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
           </div>
         ))
       ) : (

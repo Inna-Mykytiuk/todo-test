@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBoards, loadBoardsFromLocalStorage, setBoards } from '../store/board-slice';
@@ -57,7 +57,7 @@ export default function BoardDetails() {
       {board.columns.map((column) => (
         <div key={column._id}>
           <h2>{column.title}</h2>
-          <button onClick={() => handleOpenModal(column._id)}>+ Add Task</button>
+          <button type="button" onClick={() => handleOpenModal(column._id)}>+ Add Task</button>
           <TaskList boardId={boardId} columnId={column._id} />
         </div>
       ))}

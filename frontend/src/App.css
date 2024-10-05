@@ -7,11 +7,14 @@
 .columns {
   display: flex;
   justify-content: space-between;
+  padding: 10px 20px;
+
+  gap: 20px;
 }
 
 .column {
   width: 30%;
-  background-color: #f4f4f4;
+  background-color: grey;
   padding: 10px;
   border: 1px solid #ddd;
 }
@@ -45,4 +48,19 @@
   background: transparent;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.task-item {
+  padding: 10px;
+
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: grab;
 }
