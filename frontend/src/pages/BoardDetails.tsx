@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBoards, loadBoardsFromLocalStorage, setBoards } from '../store/board-slice';
 import type { RootState, AppDispatch } from "../store/store";
 import { Board } from '../store/board-slice';
-import TaskList from './TaskList';
-import Modal from './Modal';
+import TaskList from '@/components/TaskList';
+import Modal from '@/components/Modal';
 import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 

@@ -75,8 +75,8 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
                     <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                       <strong>{task.title}</strong>
                       <p>{task.description}</p>
-                      <button onClick={() => handleUpdateTask(task)}>Update</button>
-                      <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                      <button type="button" onClick={() => handleUpdateTask(task)}>Update</button>
+                      <button type="button" onClick={() => handleDeleteTask(task.id)}>Delete</button>
                     </li>
                   )}
                 </Draggable>
