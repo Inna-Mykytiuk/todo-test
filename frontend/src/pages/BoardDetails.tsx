@@ -60,28 +60,22 @@ export default function BoardDetails() {
       return;
     }
 
-    // Логування результату перетягування
-    console.log("Drag result:", result);
+    // console.log("Drag result:", result);
 
     if (destination.droppableId === source.droppableId) {
-      // Переміщення в межах однієї колонки
       const columnId = destination.droppableId;
       const taskId = result.draggableId;
 
-      // Виклик функції переміщення таски всередині колонки
       await dispatch(moveTaskWithinColumn({ boardId, columnId, taskId, targetIndex: destination.index }));
       console.log(`Таска ${taskId} переміщена в колонці ${columnId} на позицію ${destination.index}`);
     } else {
-      // Переміщення між колонками
       const sourceColumnId = source.droppableId;
       const destColumnId = destination.droppableId;
       const taskId = result.draggableId;
 
-      // Виклик функції переміщення задачі
       await dispatch(moveTaskAction({ boardId, sourceColumnId, destColumnId, taskId }));
     }
 
-    // Отримуємо нові задачі для кожної колонки
     await Promise.all(
       board.columns.map((column) =>
         dispatch(fetchTasks({ boardId, columnId: column._id }))
@@ -90,18 +84,36 @@ export default function BoardDetails() {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div>
-        <h1>{board.name} - Деталі</h1>
-        {board.columns.map((column) => (
-          <div key={column._id}>
-            <h2>{column.title}</h2>
-            <button type="button" onClick={() => handleOpenModal(column._id)}>+ Додати задачу</button>
-            <TaskList columnId={column._id} boardId={boardId} />
-          </div>
-        ))}
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
-      </div>
-    </DragDropContext>
+    <>
+      <header className="w-full bg-gradient py-[20px] shadow-lg">
+        <h1 className="text-4xl text-center text-white">{board.name} Board</h1>
+      </header>
+      <section className="w-full py-[50px]">
+        <div className="container">
+          <DragDropContext onDragEnd={onDragEnd}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {board.columns.map((column) => (
+                <div key={column._id} className="card-wrapper backlog-color">
+                  <div className='w-full h-full flex flex-col p-6 gap-4 justify-between'>
+                    <div>
+                      <h2 className="text-lg font-bold mb-2">{column.title}</h2>
+                      <TaskList columnId={column._id} boardId={boardId} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(column._id)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      + Додати задачу
+                    </button>
+                  </div>
+                </div>
+              ))}
+              <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
+            </div>
+          </DragDropContext>
+        </div>
+      </section>
+    </>
   );
 }
