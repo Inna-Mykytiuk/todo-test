@@ -13,7 +13,6 @@ const InputField: React.FC<InputFieldProps> = ({
   onChange,
   onKeyDown,
   placeholder = "Enter value",
-  className = "",
 }) => {
   return (
     <input
@@ -22,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
       onChange={onChange}
       onKeyDown={onKeyDown}
       placeholder={placeholder}
-      className={className}
+      className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-mainBcg focus:outline-none shadow-input"
     />
   );
 };
