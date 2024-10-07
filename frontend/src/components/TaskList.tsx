@@ -6,6 +6,7 @@ import type { RootState, AppDispatch } from "../store/store";
 import type { Task } from "../store/todo-slice";
 import Modal from './Modal';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
+import { ThreeDots } from 'react-loader-spinner'
 
 interface TaskListProps {
   boardId: string;
@@ -54,7 +55,20 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
   };
 
   if (loading) {
-    return <div>Loading tasks...</div>;
+    return (
+      <div>
+        <ThreeDots
+          visible={true}
+          height="80"
+          width="80"
+          color="#707090"
+          radius="9"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    )
   }
 
   if (error) {
