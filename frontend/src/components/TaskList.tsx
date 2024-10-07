@@ -15,8 +15,8 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const tasks = useSelector((state: RootState) => selectColumnTasks(state, columnId));
-  const loading = useSelector((state: RootState) => state.todos.loading);
-  const error = useSelector((state: RootState) => state.todos.error);
+  const loading = useSelector((state: RootState) => state.todos.loading[columnId]); // Оновлено
+  const error = useSelector((state: RootState) => state.todos.error[columnId]); // Оновлено
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
 
@@ -96,5 +96,6 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
     </Droppable>
   );
 };
+
 
 export default TaskList;

@@ -60,27 +60,34 @@ export default function BoardDetails() {
       return;
     }
 
-    // console.log("Drag result:", result);
+    const sourceColumnId = source.droppableId;
+    const destColumnId = destination.droppableId;
+    const taskId = result.draggableId;
 
     if (destination.droppableId === source.droppableId) {
-      const columnId = destination.droppableId;
-      const taskId = result.draggableId;
-
-      await dispatch(moveTaskWithinColumn({ boardId, columnId, taskId, targetIndex: destination.index }));
-      console.log(`Таска ${taskId} переміщена в колонці ${columnId} на позицію ${destination.index}`);
+      // Переміщення завдання всередині однієї колонки
+      await dispatch(moveTaskWithinColumn({
+        boardId,
+        columnId: sourceColumnId,
+        taskId,
+        targetIndex: destination.index
+      }));
     } else {
-      const sourceColumnId = source.droppableId;
-      const destColumnId = destination.droppableId;
-      const taskId = result.draggableId;
-
-      await dispatch(moveTaskAction({ boardId, sourceColumnId, destColumnId, taskId }));
+      // Переміщення завдання між колонками
+      await dispatch(moveTaskAction({
+        boardId,
+        sourceColumnId,
+        destColumnId,
+        taskId
+      }));
     }
 
-    await Promise.all(
-      board.columns.map((column) =>
-        dispatch(fetchTasks({ boardId, columnId: column._id }))
-      )
+    // Після переміщення, оновлюємо тільки колонки, що задіяні в переміщенні
+    const updatedColumns = [sourceColumnId, destColumnId].map(columnId =>
+      dispatch(fetchTasks({ boardId, columnId }))
     );
+
+    await Promise.all(updatedColumns); // Виконуємо оновлення колонок
   };
 
   return (

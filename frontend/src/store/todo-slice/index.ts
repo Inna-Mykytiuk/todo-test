@@ -15,14 +15,14 @@ export interface Column {
 
 interface TodoState {
   columns: Column[];
-  loading: boolean;
-  error: string | null;
+  loading: Record<string, boolean>; // Залишаємо як Record
+  error: Record<string, string | null>; // Залишаємо як Record
 }
 
 const initialState: TodoState = {
   columns: [],
-  loading: false,
-  error: null,
+  loading: {}, // Змінено на об'єкт
+  error: {}, // Змінено на об'єкт
 };
 
 export const fetchTasks = createAsyncThunk(
@@ -196,12 +196,12 @@ const todoSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTasks.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(fetchTasks.pending, (state, action) => {
+        state.loading[action.meta.arg.columnId] = true; // Встановлюємо статус загрузки для конкретної колонки
+        state.error[action.meta.arg.columnId] = null; // Очищуємо помилку для колонки
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading[action.meta.arg.columnId] = false; // Оновлюємо статус загрузки
         const column = state.columns.find(
           (col) => col.id === action.meta.arg.columnId
         );
@@ -215,8 +215,8 @@ const todoSlice = createSlice({
         }
       })
       .addCase(fetchTasks.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+        state.loading[action.meta.arg.columnId] = false; // Оновлюємо статус загрузки
+        state.error[action.meta.arg.columnId] = action.payload as string; // Оновлюємо помилку для колонки
       })
       .addCase(addTask.fulfilled, (state, action) => {
         const column = state.columns.find(
