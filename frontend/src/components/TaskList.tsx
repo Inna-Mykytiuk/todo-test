@@ -6,7 +6,9 @@ import type { RootState, AppDispatch } from "../store/store";
 import type { Task } from "../store/todo-slice";
 import Modal from './Modal';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { ThreeDots } from 'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner';
+import { IoCreateOutline } from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 
 interface TaskListProps {
   boardId: string;
@@ -16,8 +18,8 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const tasks = useSelector((state: RootState) => selectColumnTasks(state, columnId));
-  const loading = useSelector((state: RootState) => state.todos.loading[columnId]); // Оновлено
-  const error = useSelector((state: RootState) => state.todos.error[columnId]); // Оновлено
+  const loading = useSelector((state: RootState) => state.todos.loading[columnId]);
+  const error = useSelector((state: RootState) => state.todos.error[columnId]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
 
@@ -56,7 +58,7 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
 
   if (loading) {
     return (
-      <div>
+      <>
         <ThreeDots
           visible={true}
           height="80"
@@ -67,7 +69,7 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
           wrapperStyle={{}}
           wrapperClass=""
         />
-      </div>
+      </>
     )
   }
 
@@ -82,15 +84,31 @@ const TaskList: React.FC<TaskListProps> = ({ boardId, columnId }) => {
           {tasks.length === 0 ? (
             <p>No tasks available</p>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-4">
               {tasks.map((task: Task, index: number) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
                   {(provided) => (
-                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <strong>{task.title}</strong>
+                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                      className="flex flex-col bg-white p-2 rounded cursor-drag"
+                    >
+                      <div className="flex justify-between">
+                        <h3 className="text-base font-bold">{task.title}</h3>
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => handleUpdateTask(task)}
+                            aria-label="Edit task"
+                            className="flex items-center justify-center w-[24px] h-[24px] text-gray-400 hover:text-mainBcg transition-all duration-300 ease-out text-2xl shadow-input"
+                          >
+                            <IoCreateOutline />
+                          </button>
+                          <button type="button" onClick={() => handleDeleteTask(task.id)}
+                            aria-label="Delete task"
+                            className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 hover:text-red-400 transition-all duration-300 ease-out text-4xl"
+                          >
+                            <IoCloseOutline />
+                          </button>
+                        </div>
+                      </div>
                       <p>{task.description}</p>
-                      <button type="button" onClick={() => handleUpdateTask(task)}>Update</button>
-                      <button type="button" onClick={() => handleDeleteTask(task.id)}>Delete</button>
                     </li>
                   )}
                 </Draggable>

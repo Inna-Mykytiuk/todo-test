@@ -107,3 +107,14 @@ body::-webkit-scrollbar-thumb {
   position: relative;
   width: 400px;
 }
+
+.smooth::-webkit-scrollbar {
+  appearance: none;
+  background: rgb(211, 210, 210);
+  width: 5px;
+}
+
+.smooth::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 5px;
+}

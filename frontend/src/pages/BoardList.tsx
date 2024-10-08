@@ -175,7 +175,7 @@ const BoardList: React.FC = () => {
                         to={`/boards/${board._id}`}
                         className="group flex items-center gap-2 text-gray-400 text-base mt-4 hover:text-mainBcg transition-all duration-300 ease-out"
                       >
-                        Add Task
+                        Create Task
                         <GoPlus
                           className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out"
                         />

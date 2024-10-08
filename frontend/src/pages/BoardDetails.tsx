@@ -8,6 +8,7 @@ import TaskList from '@/components/TaskList';
 import Modal from '@/components/Modal';
 import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { GoPlus } from "react-icons/go";
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -65,7 +66,6 @@ export default function BoardDetails() {
     const taskId = result.draggableId;
 
     if (destination.droppableId === source.droppableId) {
-      // Переміщення завдання всередині однієї колонки
       await dispatch(moveTaskWithinColumn({
         boardId,
         columnId: sourceColumnId,
@@ -73,7 +73,6 @@ export default function BoardDetails() {
         targetIndex: destination.index
       }));
     } else {
-      // Переміщення завдання між колонками
       await dispatch(moveTaskAction({
         boardId,
         sourceColumnId,
@@ -82,12 +81,11 @@ export default function BoardDetails() {
       }));
     }
 
-    // Після переміщення, оновлюємо тільки колонки, що задіяні в переміщенні
     const updatedColumns = [sourceColumnId, destColumnId].map(columnId =>
       dispatch(fetchTasks({ boardId, columnId }))
     );
 
-    await Promise.all(updatedColumns); // Виконуємо оновлення колонок
+    await Promise.all(updatedColumns);
   };
 
   return (
@@ -102,16 +100,20 @@ export default function BoardDetails() {
               {board.columns.map((column) => (
                 <div key={column._id} className="card-wrapper backlog-color">
                   <div className='w-full h-full flex flex-col p-6 gap-4 justify-between'>
-                    <div>
-                      <h2 className="text-lg font-bold mb-2">{column.title}</h2>
+                    <div className="max-h-[600px] overflow-y-auto smooth  scroll-smooth">
+                      <h2 className="text-xl font-bold mb-2">{column.title}</h2>
                       <TaskList columnId={column._id} boardId={boardId} />
                     </div>
                     <button
                       type="button"
                       onClick={() => handleOpenModal(column._id)}
-                      className="text-blue-500 hover:text-blue-700"
+                      aria-label="Add task"
+                      className="justify-center group flex items-center gap-2 text-gray-400 text-base mt-4 hover:text-mainBcg transition-all duration-300 ease-out"
                     >
-                      + Додати задачу
+                      Add Task
+                      <GoPlus
+                        className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out"
+                      />
                     </button>
                   </div>
                 </div>
