@@ -4,7 +4,7 @@ const {
   createBoard,
   updateBoard,
   deleteBoard,
-} = require("../controllers/board-controller");
+} = require("../controllers/board-controller.ts");
 
 const boardRouter = expressBoard.Router();
 

@@ -6,7 +6,7 @@ const {
   deleteTaskInColumn,
   moveTask,
   moveTaskWithinColumn,
-} = require("../controllers/task-controller");
+} = require("../controllers/task-controller.ts");
 
 const taskRouter = expressTask.Router();
 
