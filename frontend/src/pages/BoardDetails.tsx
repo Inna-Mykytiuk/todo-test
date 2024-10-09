@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBoards, loadBoardsFromLocalStorage, setBoards } from '../store/board-slice';
 import type { RootState, AppDispatch } from "../store/store";
 import { Board } from '../store/board-slice';
-import TaskList from '@/components/TaskList';
-import Modal from '@/components/Modal';
+import TaskList from '../components/TaskList';
+import Modal from '../components/Modal';
 import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { GoPlus } from "react-icons/go";
@@ -15,7 +15,6 @@ export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
   const { boardId } = useParams<{ boardId: string }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [localBoards, setLocalBoards] = useState<Board[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
@@ -93,6 +92,9 @@ export default function BoardDetails() {
     <>
       <header className="w-full bg-gradient py-[20px] shadow-lg">
         <h1 className="text-4xl text-center text-white">{board.name} Board</h1>
+        {localBoards.length > 0 && (
+          <h2 className="text-xl text-center text-white mt-4 hidden">Local Boards Loaded</h2>
+        )}
       </header>
       <section className="w-full py-[50px] flex-grow min-h-screen">
         <div className="container">
