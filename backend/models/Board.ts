@@ -1,4 +1,4 @@
-let mongo = require("mongoose");
+const mongo = require("mongoose");
 const { Schema } = mongo;
 
 const columnSchema = new Schema({
