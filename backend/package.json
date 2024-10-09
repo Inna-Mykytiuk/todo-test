@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "server.ts",
     "dev": "nodemon server.ts",
+    "build": "tsc",
     "lint": "eslint **/*.ts",
     "lint:fix": "eslint --fix **/*.ts",
     "format:write": "prettier --write .",
