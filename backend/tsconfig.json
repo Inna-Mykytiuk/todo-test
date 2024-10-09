@@ -9,6 +9,6 @@
     "rootDir": "./",
     "sourceMap": true
   },
-  "include": ["**/*.ts", "server.mjs"],
+  "include": ["**/*.ts", "server.js"],
   "exclude": ["node_modules"]
 }
