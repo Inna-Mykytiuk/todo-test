@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const Board = require("../models/Board");
 
-export const addTaskToColumn = async (req = Request, res = Response) => {
+const addTaskToColumn = async (req = Request, res = Response) => {
   const { boardId, columnId } = req.params;
   const { title, description } = req.body;
 
@@ -35,7 +35,7 @@ export const addTaskToColumn = async (req = Request, res = Response) => {
   }
 };
 
-export const getTasksInColumn = async (req = Request, res = Response) => {
+const getTasksInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId } = req.params;
 
   try {
@@ -66,8 +66,7 @@ export const getTasksInColumn = async (req = Request, res = Response) => {
     res.status(500).json({ message: "Помилка отримання задач" });
   }
 };
-
-export const deleteTaskInColumn = async (req = Request, res = Response) => {
+const deleteTaskInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
 
   try {
@@ -108,7 +107,7 @@ export const deleteTaskInColumn = async (req = Request, res = Response) => {
   }
 };
 
-export const updateTaskInColumn = async (req = Request, res = Response) => {
+const updateTaskInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
   const { title, description } = req.body;
 
@@ -166,7 +165,7 @@ export const updateTaskInColumn = async (req = Request, res = Response) => {
   }
 };
 
-export const moveTask = async (req = Request, res = Response) => {
+const moveTask = async (req = Request, res = Response) => {
   const { boardId, sourceColumnId, destColumnId, taskId } = req.params;
 
   try {
@@ -206,7 +205,7 @@ export const moveTask = async (req = Request, res = Response) => {
   }
 };
 
-export const moveTaskWithinColumn = async (req = Request, res = Response) => {
+const moveTaskWithinColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
 
   try {
@@ -257,4 +256,13 @@ export const moveTaskWithinColumn = async (req = Request, res = Response) => {
   } catch {
     res.status(500).json({ message: "Помилка переміщення задачі" });
   }
+};
+
+module.exports = {
+  addTaskToColumn,
+  getTasksInColumn,
+  deleteTaskInColumn,
+  updateTaskInColumn,
+  moveTask,
+  moveTaskWithinColumn,
 };
