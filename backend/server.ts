@@ -10,13 +10,7 @@ const taskRoutes = require("./routes/task-routes");
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch((error: unknown) => {
-    if (error instanceof Error) {
-      console.log(error.message); // Виводимо повідомлення про помилку
-    } else {
-      console.log("Unknown error", error);
-    }
-  });
+  .catch(() => console.log({ message: "Server error" }));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
