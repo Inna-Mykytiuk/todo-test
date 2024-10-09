@@ -1,14 +1,14 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const columnSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, required: true, auto: true },
-  title: { type: String, required: true },
-  tasks: { type: Array, default: [] },
+    _id: { type: Schema.Types.ObjectId, required: true, auto: true },
+    title: { type: String, required: true },
+    tasks: { type: Array, default: [] },
 });
 
 const boardSchema = new Schema({
-  name: { type: String, required: true },
-  columns: [columnSchema],
+    name: { type: String, required: true },
+    columns: [columnSchema],
 });
 
 export default mongoose.model("Board", boardSchema);

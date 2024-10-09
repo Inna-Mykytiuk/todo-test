@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  getBoards,
-  createBoard,
-  updateBoard,
-  deleteBoard,
+    getBoards,
+    createBoard,
+    updateBoard,
+    deleteBoard,
 } from "../controllers/board-controller";
 
 const router = express.Router();

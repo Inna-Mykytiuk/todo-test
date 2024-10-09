@@ -5,7 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "server.ts",
-    "dev": "nodemon server.ts"
+    "dev": "nodemon server.ts",
+    "lint": "eslint **/*.ts",
+    "lint:fix": "eslint --fix **/*.ts",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "keywords": [],
   "author": "",
@@ -21,13 +25,20 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.12.0",
     "@types/cors": "^2.8.17",
+    "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.96",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.7.4",
     "@types/uuid": "^10.0.0",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.11.0",
+    "prettier": "3.3.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.8.1"
   }
 }

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSelector } from "reselect"; // Імпорт reselect
+import { createSelector } from "reselect";
 import axios from "axios";
 
 export interface Task {
@@ -15,14 +15,14 @@ export interface Column {
 
 interface TodoState {
   columns: Column[];
-  loading: Record<string, boolean>; // Залишаємо як Record
-  error: Record<string, string | null>; // Залишаємо як Record
+  loading: Record<string, boolean>;
+  error: Record<string, string | null>;
 }
 
 const initialState: TodoState = {
   columns: [],
-  loading: {}, // Змінено на об'єкт
-  error: {}, // Змінено на об'єкт
+  loading: {},
+  error: {},
 };
 
 export const fetchTasks = createAsyncThunk(
@@ -35,7 +35,6 @@ export const fetchTasks = createAsyncThunk(
       const response = await axios.get(
         `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks`
       );
-      // console.log("Фетчинг задач:", response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -149,26 +148,26 @@ export const moveTask = createAsyncThunk(
   }
 );
 
-export const updateTaskPosition = createAsyncThunk(
-  "todo/updateTaskPosition",
-  async ({
-    boardId,
-    columnId,
-    taskId,
-    newIndex,
-  }: {
-    boardId: string;
-    columnId: string;
-    taskId: string;
-    newIndex: number;
-  }) => {
-    const response = await axios.put(
-      `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}/position`,
-      { newIndex }
-    );
-    return response.data;
-  }
-);
+// export const updateTaskPosition = createAsyncThunk(
+//   "todo/updateTaskPosition",
+//   async ({
+//     boardId,
+//     columnId,
+//     taskId,
+//     newIndex,
+//   }: {
+//     boardId: string;
+//     columnId: string;
+//     taskId: string;
+//     newIndex: number;
+//   }) => {
+//     const response = await axios.put(
+//       `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}/position`,
+//       { newIndex }
+//     );
+//     return response.data;
+//   }
+// );
 
 export const moveTaskWithinColumn = createAsyncThunk(
   "todo/moveTaskWithinColumn",
@@ -186,7 +185,7 @@ export const moveTaskWithinColumn = createAsyncThunk(
     const response = await axios.put(
       `http://localhost:5000/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
     );
-    return response.data; // Повертаємо дані, які будуть використані у редюсері
+    return response.data;
   }
 );
 
@@ -197,11 +196,11 @@ const todoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.pending, (state, action) => {
-        state.loading[action.meta.arg.columnId] = true; // Встановлюємо статус загрузки для конкретної колонки
-        state.error[action.meta.arg.columnId] = null; // Очищуємо помилку для колонки
+        state.loading[action.meta.arg.columnId] = true;
+        state.error[action.meta.arg.columnId] = null;
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.loading[action.meta.arg.columnId] = false; // Оновлюємо статус загрузки
+        state.loading[action.meta.arg.columnId] = false;
         const column = state.columns.find(
           (col) => col.id === action.meta.arg.columnId
         );
@@ -215,8 +214,8 @@ const todoSlice = createSlice({
         }
       })
       .addCase(fetchTasks.rejected, (state, action) => {
-        state.loading[action.meta.arg.columnId] = false; // Оновлюємо статус загрузки
-        state.error[action.meta.arg.columnId] = action.payload as string; // Оновлюємо помилку для колонки
+        state.loading[action.meta.arg.columnId] = false;
+        state.error[action.meta.arg.columnId] = action.payload as string;
       })
       .addCase(addTask.fulfilled, (state, action) => {
         const column = state.columns.find(
@@ -271,36 +270,32 @@ const todoSlice = createSlice({
         if (column) {
           const taskIndex = column.tasks.findIndex((t) => t.id === task.id);
           if (taskIndex !== -1) {
-            // Вилучаємо задачу з початкової позиції
             column.tasks.splice(taskIndex, 1);
-            // Додаємо задачу на нову позицію
             column.tasks.splice(action.payload.targetIndex, 0, task);
           }
         }
-      })
-      .addCase(updateTaskPosition.fulfilled, (state, action) => {
-        const { columnId, taskId } = action.payload;
-        const column = state.columns.find((col) => col.id === columnId);
-
-        if (column) {
-          const taskIndex = column.tasks.findIndex(
-            (task) => task.id === taskId
-          );
-          if (taskIndex !== -1) {
-            const [task] = column.tasks.splice(taskIndex, 1);
-            column.tasks.splice(action.payload.newIndex, 0, task);
-          }
-        }
       });
+    // .addCase(updateTaskPosition.fulfilled, (state, action) => {
+    //   const { columnId, taskId } = action.payload;
+    //   const column = state.columns.find((col) => col.id === columnId);
+
+    //   if (column) {
+    //     const taskIndex = column.tasks.findIndex(
+    //       (task) => task.id === taskId
+    //     );
+    //     if (taskIndex !== -1) {
+    //       const [task] = column.tasks.splice(taskIndex, 1);
+    //       column.tasks.splice(action.payload.newIndex, 0, task);
+    //     }
+    //   }
+    // });
   },
 });
 
-// Selectors
 export const selectColumns = (state: { todo: TodoState }) => state.todo.columns;
 export const selectLoading = (state: { todo: TodoState }) => state.todo.loading;
 export const selectError = (state: { todo: TodoState }) => state.todo.error;
 
-// Мемоїзований селектор для отримання задач з конкретної колонки
 export const selectColumnTasks = createSelector(
   (state: { todos: TodoState }, columnId: string) =>
     state.todos.columns.find((col) => col.id === columnId),

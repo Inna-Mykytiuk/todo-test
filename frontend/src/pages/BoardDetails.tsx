@@ -9,6 +9,7 @@ import Modal from '@/components/Modal';
 import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { GoPlus } from "react-icons/go";
+import { Link } from 'react-router-dom';
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -93,7 +94,7 @@ export default function BoardDetails() {
       <header className="w-full bg-gradient py-[20px] shadow-lg">
         <h1 className="text-4xl text-center text-white">{board.name} Board</h1>
       </header>
-      <section className="w-full py-[50px]">
+      <section className="w-full py-[50px] flex-grow min-h-screen">
         <div className="container">
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -121,6 +122,12 @@ export default function BoardDetails() {
               <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
             </div>
           </DragDropContext>
+          <Link to="/"
+            className="flex mt-4 bg-gradient text-white font-bold py-2 px-4 rounded hover:bg-mainColor transition-all duration-300 ease-out mx-auto max-w-[100px] justify-center"
+          >
+            Go Back
+
+          </Link>
         </div>
       </section>
     </>

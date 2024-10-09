@@ -9,9 +9,9 @@ import taskRoutes from "./routes/task-routes";
 dotenv.config();
 
 mongoose
-  .connect(process.env.MONGODB_URI as string)
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.log(error));
+    .connect(process.env.MONGODB_URI as string)
+    .then(() => console.log("MongoDB connected"))
+    .catch((error) => console.log(error));
 
 const app = express();
 const PORT = process.env.PORT || 5000;

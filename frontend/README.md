@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# Task Management Boards
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tech stack 
+- React for the front-end (only hooks, no classes).
+- For front-end part state manager for data (redux, redux-toolkit or any other which you prefer).
+- Back-end framework which is suitable for you (Nest.js or Express.js).
+- Typescript is a must for both front-end and back-end (frameworks, which doesn't support Typescript are not allowed).
+- Use MongoDB or PostgreSQL for data storage.
+- Code quality checkers are required (at least ESLint and Prettier)
+> Stack requirements mentioned above are obligatory to follow. Other technologies and patterns are free of your choice.  
 
-Currently, two official plugins are available:
+## Extra points - optional
+- Add github actions to run code quality checks for frontend and backend
+- Provide a Dockerfile for frontend and backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requirements
+1. Each visitor is allowed to create/update/delete boards (implement UX/UI on your own).
+2. Each board (unique hashed ID, name) should contain 3 columns - ToDo, In Progress, Done.
+3. Each visitor can enter a board ID and load relevant columns with cards (if exist) related to this board.
+4. Each visitor should be able to add/update/delete cards (title and description).
+5. Visitors should be able to drag and drop cards into other columns, or change order.
+> User authentication is not needed. Boards management is considered to be implemented anonymously.
 
-## Expanding the ESLint configuration
+## Assessment
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+What will we assess:
+- workability: how your application works;
+- project structure: how you structure your files;
+- code quality: how you write clean, readable code;
+- knowledge of technologies and their ecosystem: how you compose and use libraries together;
+- testing: how you can test your code;
 
-- Configure the top-level `parserOptions` property like this:
+## Mockups
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+![image](https://res.cloudinary.com/dgw6mlivg/image/upload/v1704446575/Title_1_yecgix.png)
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## How to complete the task
+- create a new public repo on GitHub;
+- develop the application according to the requirements;
+- send us the link to your repo;
+- deploy your application to any service;
+- if you don't see something in the design, you can implement this functionality in UI just with your vision and understanding.
