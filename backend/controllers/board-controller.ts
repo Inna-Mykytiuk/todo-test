@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-const BoardMain = require("../models/Board");
+const BoardMain = require("../models/Board.ts");
+const { Request, Response } = require("express");
 
-const getBoards = async (req: Request, res: Response) => {
+const getBoards = async (req = Request, res = Response) => {
   try {
     const boards = await BoardMain.find();
     res.status(200).json(boards);
@@ -10,7 +10,7 @@ const getBoards = async (req: Request, res: Response) => {
   }
 };
 
-const createBoard = async (req: Request, res: Response) => {
+const createBoard = async (req = Request, res = Response) => {
   const { name } = req.body;
 
   try {
@@ -29,7 +29,7 @@ const createBoard = async (req: Request, res: Response) => {
   }
 };
 
-const updateBoard = async (req: Request, res: Response) => {
+const updateBoard = async (req = Request, res = Response) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -49,7 +49,7 @@ const updateBoard = async (req: Request, res: Response) => {
   }
 };
 
-const deleteBoard = async (req: Request, res: Response) => {
+const deleteBoard = async (req = Request, res = Response) => {
   const { id } = req.params;
 
   try {

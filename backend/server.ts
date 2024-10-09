@@ -1,13 +1,13 @@
 require("dotenv").config();
 
 const express = require("express");
-const mongoo = require("mongoose");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 const boardRoutes = require("./routes/board-routes.ts");
 const taskRoutes = require("./routes/task-routes.ts");
 
-mongoo
+mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(() => console.log({ message: "Server error" }));

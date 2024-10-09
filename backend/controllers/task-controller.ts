@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+const { Request, Response } = require("express");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const Board = require("../models/Board");
 
-export const addTaskToColumn = async (req: Request, res: Response) => {
+export const addTaskToColumn = async (req = Request, res = Response) => {
   const { boardId, columnId } = req.params;
   const { title, description } = req.body;
 
@@ -19,9 +19,7 @@ export const addTaskToColumn = async (req: Request, res: Response) => {
       return;
     }
 
-    const column = board.columns.find(
-      (col: any) => col._id.toString() === columnId
-    );
+    const column = board.columns.find((col) => col._id.toString() === columnId);
     if (!column) {
       res.status(404).json({ message: "Колонка не знайдена" });
       return;
@@ -37,7 +35,7 @@ export const addTaskToColumn = async (req: Request, res: Response) => {
   }
 };
 
-export const getTasksInColumn = async (req: Request, res: Response) => {
+export const getTasksInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId } = req.params;
 
   try {
@@ -57,9 +55,7 @@ export const getTasksInColumn = async (req: Request, res: Response) => {
       return;
     }
 
-    const column = board.columns.find(
-      (col: any) => col._id.toString() === columnId
-    );
+    const column = board.columns.find((col) => col._id.toString() === columnId);
     if (!column) {
       res.status(404).json({ message: "Колонка не знайдена" });
       return;
@@ -71,7 +67,7 @@ export const getTasksInColumn = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteTaskInColumn = async (req: Request, res: Response) => {
+export const deleteTaskInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
 
   try {
@@ -91,15 +87,13 @@ export const deleteTaskInColumn = async (req: Request, res: Response) => {
       return;
     }
 
-    const column = board.columns.find(
-      (col: any) => col._id.toString() === columnId
-    );
+    const column = board.columns.find((col) => col._id.toString() === columnId);
     if (!column) {
       res.status(404).json({ message: "Колонка не знайдена" });
       return;
     }
 
-    const taskIndex = column.tasks.findIndex((t: any) => t.id === taskId);
+    const taskIndex = column.tasks.findIndex((t) => t.id === taskId);
     if (taskIndex === -1) {
       res.status(404).json({ message: "Задача не знайдена" });
       return;
@@ -114,7 +108,7 @@ export const deleteTaskInColumn = async (req: Request, res: Response) => {
   }
 };
 
-export const updateTaskInColumn = async (req: Request, res: Response) => {
+export const updateTaskInColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
   const { title, description } = req.body;
 
@@ -152,16 +146,14 @@ export const updateTaskInColumn = async (req: Request, res: Response) => {
       return;
     }
 
-    const column = board.columns.find(
-      (col: any) => col._id.toString() === columnId
-    );
+    const column = board.columns.find((col) => col._id.toString() === columnId);
 
     if (!column) {
       res.status(404).json({ message: "Колонка не знайдена" });
       return;
     }
 
-    const task = column.tasks.find((t: any) => t.id === taskId);
+    const task = column.tasks.find((t) => t.id === taskId);
 
     if (!task) {
       res.status(404).json({ message: "Задача не знайдена" });
@@ -174,7 +166,7 @@ export const updateTaskInColumn = async (req: Request, res: Response) => {
   }
 };
 
-export const moveTask = async (req: Request, res: Response) => {
+export const moveTask = async (req = Request, res = Response) => {
   const { boardId, sourceColumnId, destColumnId, taskId } = req.params;
 
   try {
@@ -185,10 +177,10 @@ export const moveTask = async (req: Request, res: Response) => {
     }
 
     const sourceColumn = board.columns.find(
-      (col: any) => col._id.toString() === sourceColumnId
+      (col) => col._id.toString() === sourceColumnId
     );
     const destColumn = board.columns.find(
-      (col: any) => col._id.toString() === destColumnId
+      (col) => col._id.toString() === destColumnId
     );
     if (!sourceColumn || !destColumn) {
       res.status(404).json({ message: "Колонка не знайдена" });
@@ -196,7 +188,7 @@ export const moveTask = async (req: Request, res: Response) => {
     }
 
     const taskIndex = sourceColumn.tasks.findIndex(
-      (task: any) => task.id === taskId
+      (task) => task.id === taskId
     );
     if (taskIndex === -1) {
       res.status(404).json({ message: "Задача не знайдена" });
@@ -214,7 +206,7 @@ export const moveTask = async (req: Request, res: Response) => {
   }
 };
 
-export const moveTaskWithinColumn = async (req: Request, res: Response) => {
+export const moveTaskWithinColumn = async (req = Request, res = Response) => {
   const { boardId, columnId, taskId } = req.params;
 
   try {
@@ -234,15 +226,13 @@ export const moveTaskWithinColumn = async (req: Request, res: Response) => {
       return;
     }
 
-    const column = board.columns.find(
-      (col: any) => col._id.toString() === columnId
-    );
+    const column = board.columns.find((col) => col._id.toString() === columnId);
     if (!column) {
       res.status(404).json({ message: "Колонка не знайдена" });
       return;
     }
 
-    const taskIndex = column.tasks.findIndex((t: any) => t.id === taskId);
+    const taskIndex = column.tasks.findIndex((t) => t.id === taskId);
     if (taskIndex === -1) {
       res.status(404).json({ message: "Задача не знайдена" });
       return;

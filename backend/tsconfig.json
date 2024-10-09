@@ -7,7 +7,9 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "sourceMap": true
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "moduleDetection": "force"
   },
   "include": ["**/*.ts", "server.js"],
   "exclude": ["node_modules"]
