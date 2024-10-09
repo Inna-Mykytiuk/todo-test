@@ -1,7 +1,7 @@
 const { Request, Response } = require("express");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
-const Board = require("../models/Board");
+const Board = require("../models/Board.ts");
 
 const addTaskToColumn = async (req = Request, res = Response) => {
   const { boardId, columnId } = req.params;
