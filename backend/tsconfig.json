@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
-        "rootDir": "./",
-        "outDir": "./dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "include": ["server.ts"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "ES6", // або інша версія, яку ви хочете
+    "module": "commonjs", // використовуємо CommonJS
+    "strict": true,
+    "esModuleInterop": true, // це дозволить імпортувати ES6 модулі
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist", // місце для скомпільованих файлів
+    "rootDir": "./" // коренева папка проекту
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,17 +1,16 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import dotenv from "dotenv";
+require("dotenv").config();
 
-import boardRoutes from "./routes/board-routes";
-import taskRoutes from "./routes/task-routes";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-dotenv.config();
+const boardRoutes = require("./routes/board-routes");
+const taskRoutes = require("./routes/task-routes");
 
 mongoose
-    .connect(process.env.MONGODB_URI as string)
-    .then(() => console.log("MongoDB connected"))
-    .catch((error) => console.log(error));
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((error: Error) => console.log(error));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
