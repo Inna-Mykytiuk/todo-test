@@ -33,7 +33,7 @@ export const fetchTasks = createAsyncThunk(
   ) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks`
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`
       );
       return response.data;
     } catch (error) {
@@ -61,7 +61,7 @@ export const addTask = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks`,
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`,
         { title, description }
       );
       console.log("Задача додана:", response.data);
@@ -93,7 +93,7 @@ export const updateTask = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         { title, description }
       );
       console.log("Задача оновлена:", response.data);
@@ -117,7 +117,7 @@ export const deleteTask = createAsyncThunk(
   ) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`
       );
       console.log("Задача видалена:", response.data);
       return taskId;
@@ -142,32 +142,11 @@ export const moveTask = createAsyncThunk(
     destColumnId: string;
   }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/boards/${boardId}/columns/${sourceColumnId}/tasks/${taskId}/move/${destColumnId}`
+      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${sourceColumnId}/tasks/${taskId}/move/${destColumnId}`
     );
     return response.data;
   }
 );
-
-// export const updateTaskPosition = createAsyncThunk(
-//   "todo/updateTaskPosition",
-//   async ({
-//     boardId,
-//     columnId,
-//     taskId,
-//     newIndex,
-//   }: {
-//     boardId: string;
-//     columnId: string;
-//     taskId: string;
-//     newIndex: number;
-//   }) => {
-//     const response = await axios.put(
-//       `http://localhost:5000/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}/position`,
-//       { newIndex }
-//     );
-//     return response.data;
-//   }
-// );
 
 export const moveTaskWithinColumn = createAsyncThunk(
   "todo/moveTaskWithinColumn",
@@ -183,7 +162,7 @@ export const moveTaskWithinColumn = createAsyncThunk(
     targetIndex: number;
   }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
+      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
     );
     return response.data;
   }
@@ -275,20 +254,6 @@ const todoSlice = createSlice({
           }
         }
       });
-    // .addCase(updateTaskPosition.fulfilled, (state, action) => {
-    //   const { columnId, taskId } = action.payload;
-    //   const column = state.columns.find((col) => col.id === columnId);
-
-    //   if (column) {
-    //     const taskIndex = column.tasks.findIndex(
-    //       (task) => task.id === taskId
-    //     );
-    //     if (taskIndex !== -1) {
-    //       const [task] = column.tasks.splice(taskIndex, 1);
-    //       column.tasks.splice(action.payload.newIndex, 0, task);
-    //     }
-    //   }
-    // });
   },
 });
 

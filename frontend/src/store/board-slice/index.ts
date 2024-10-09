@@ -35,7 +35,9 @@ const initialState: BoardsState = {
 export const fetchBoards = createAsyncThunk<Board[]>(
   "boards/fetchBoards",
   async () => {
-    const response = await axios.get("http://localhost:5000/api/boards");
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/boards`
+    );
     return response.data;
   }
 );
@@ -43,9 +45,12 @@ export const fetchBoards = createAsyncThunk<Board[]>(
 export const createBoard = createAsyncThunk<Board, string>(
   "boards/createBoard",
   async (name) => {
-    const response = await axios.post("http://localhost:5000/api/boards", {
-      name,
-    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/boards`,
+      {
+        name,
+      }
+    );
     return response.data;
   }
 );
@@ -54,9 +59,12 @@ export const updateBoard = createAsyncThunk<
   Board,
   { id: string; name: string }
 >("boards/updateBoard", async ({ id, name }) => {
-  const response = await axios.put(`http://localhost:5000/api/boards/${id}`, {
-    name,
-  });
+  const response = await axios.put(
+    `${import.meta.env.VITE_API_URL}/api/boards/${id}`,
+    {
+      name,
+    }
+  );
   return response.data;
 });
 
@@ -68,7 +76,7 @@ export const deleteBoard = createAsyncThunk<string, string>(
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/boards/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/boards/${id}`);
       return id;
     } catch (error) {
       console.error("Error deleting board:", error);
@@ -83,10 +91,10 @@ const boardSlice = createSlice({
   reducers: {
     setBoards: (state, action: PayloadAction<Board[]>) => {
       state.boards = action.payload;
-      localStorage.setItem("boards", JSON.stringify(action.payload)); // Save to local storage
+      localStorage.setItem("boards", JSON.stringify(action.payload));
     },
     clearBoardName: (state) => {
-      state.error = null; // Clear error
+      state.error = null;
     },
     updateLocalBoard: (
       state,
@@ -95,12 +103,12 @@ const boardSlice = createSlice({
       const { id, name } = action.payload;
       const index = state.boards.findIndex((b) => b._id === id);
       if (index !== -1) {
-        state.boards[index].name = name; // Update board name
+        state.boards[index].name = name;
       }
     },
     deleteLocalBoard: (state, action: PayloadAction<string>) => {
       state.boards = state.boards.filter(
-        (board) => board._id !== action.payload // Delete local board
+        (board) => board._id !== action.payload
       );
     },
   },
