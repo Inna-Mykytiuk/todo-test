@@ -36,7 +36,7 @@ What will we assess:
 
 ## Mockups
 
-![image](https://res.cloudinary.com/dgw6mlivg/image/upload/v1704446575/Title_1_yecgix.png)
+![preview](https://github.com/Inna-Mykytiuk/todo-test/blob/main/forest.jpg)
 
 ## How to complete the task
 
