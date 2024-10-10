@@ -120,7 +120,7 @@ const BoardList: React.FC = () => {
               </div>
             </div>
 
-            {loading && <p>Loading...</p>}
+            {loading && <p> Please wait for a response from the server...Data is loading...</p>}
             {error && <p className="text-red-500">Error: {error}</p>}
 
             {filteredBoards.length > 0 ? (
