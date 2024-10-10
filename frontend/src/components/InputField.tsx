@@ -21,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
       onChange={onChange}
       onKeyDown={onKeyDown}
       placeholder={placeholder}
-      className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-mainBcg focus:outline-none shadow-input"
+      className="w-full rounded-md border border-gray-300 px-4 py-2 shadow-input focus:border-mainBcg focus:outline-none"
     />
   );
 };

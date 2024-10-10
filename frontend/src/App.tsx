@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-import BoardList from "./pages/BoardList";
-import BoardDetails from "./pages/BoardDetails";
-import SharedLayout from "./components/SharedLayout";
 
 import "./App.css";
+import SharedLayout from "./components/SharedLayout";
+import BoardDetails from "./pages/BoardDetails";
+import BoardList from "./pages/BoardList";
 
 export default function App() {
   return (

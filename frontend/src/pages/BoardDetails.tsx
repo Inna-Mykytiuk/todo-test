@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { GoPlus } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
-import { GoPlus } from "react-icons/go";
-import { Link } from "react-router-dom";
-
+import Modal from "../components/Modal";
+import TaskList from "../components/TaskList";
 import {
   fetchBoards,
   loadBoardsFromLocalStorage,
   setBoards,
 } from "../store/board-slice";
-import type { RootState, AppDispatch } from "../store/store";
+import { Board } from "../store/board-slice";
+import type { AppDispatch, RootState } from "../store/store";
 import {
   addTask,
-  moveTask as moveTaskAction,
   fetchTasks,
+  moveTask as moveTaskAction,
   moveTaskWithinColumn,
 } from "../store/todo-slice";
-import { Board } from "../store/board-slice";
-
-import TaskList from "../components/TaskList";
-import Modal from "../components/Modal";
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +31,7 @@ export default function BoardDetails() {
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
 
   const board = useSelector((state: RootState) =>
-    state.boards.boards.find((b: Board) => b._id === boardId),
+    state.boards.boards.find((b: Board) => b._id === boardId)
   );
 
   useEffect(() => {
@@ -63,7 +61,7 @@ export default function BoardDetails() {
   const handleSaveTask = async (title: string, description: string) => {
     if (currentColumnId) {
       await dispatch(
-        addTask({ boardId, columnId: currentColumnId, title, description }),
+        addTask({ boardId, columnId: currentColumnId, title, description })
       );
     }
     handleCloseModal();
@@ -87,7 +85,7 @@ export default function BoardDetails() {
           columnId: sourceColumnId,
           taskId,
           targetIndex: destination.index,
-        }),
+        })
       );
     } else {
       await dispatch(
@@ -96,12 +94,12 @@ export default function BoardDetails() {
           sourceColumnId,
           destColumnId,
           taskId,
-        }),
+        })
       );
     }
 
     const updatedColumns = [sourceColumnId, destColumnId].map((columnId) =>
-      dispatch(fetchTasks({ boardId, columnId })),
+      dispatch(fetchTasks({ boardId, columnId }))
     );
 
     await Promise.all(updatedColumns);
@@ -110,32 +108,32 @@ export default function BoardDetails() {
   return (
     <>
       <header className="w-full bg-gradient py-[20px] shadow-lg">
-        <h1 className="text-4xl text-center text-white">{board.name} Board</h1>
+        <h1 className="text-center text-4xl text-white">{board.name} Board</h1>
         {localBoards.length > 0 && (
-          <h2 className="text-xl text-center text-white mt-4 hidden">
+          <h2 className="mt-4 hidden text-center text-xl text-white">
             Local Boards Loaded
           </h2>
         )}
       </header>
-      <section className="w-full py-[50px] flex-grow min-h-screen">
+      <section className="min-h-screen w-full flex-grow py-[50px]">
         <div className="container">
           <DragDropContext onDragEnd={onDragEnd}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {board.columns.map((column) => (
                 <div key={column._id} className="card-wrapper backlog-color">
-                  <div className="w-full h-full flex flex-col p-6 gap-4 justify-between">
-                    <div className="max-h-[600px] overflow-y-auto smooth  scroll-smooth">
-                      <h2 className="text-xl font-bold mb-2">{column.title}</h2>
+                  <div className="flex h-full w-full flex-col justify-between gap-4 p-6">
+                    <div className="smooth max-h-[600px] overflow-y-auto scroll-smooth">
+                      <h2 className="mb-2 text-xl font-bold">{column.title}</h2>
                       <TaskList columnId={column._id} boardId={boardId} />
                     </div>
                     <button
                       type="button"
                       onClick={() => handleOpenModal(column._id)}
                       aria-label="Add task"
-                      className="justify-center group flex items-center gap-2 text-gray-400 text-base mt-4 hover:text-mainBcg transition-all duration-300 ease-out"
+                      className="group mt-4 flex items-center justify-center gap-2 text-base text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
                     >
                       Add Task
-                      <GoPlus className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out" />
+                      <GoPlus className="h-[24px] w-[24px] rounded-full border border-dashed border-gray-400 p-1 text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out group-hover:border-mainBcg group-hover:text-mainBcg" />
                     </button>
                   </div>
                 </div>
@@ -149,7 +147,7 @@ export default function BoardDetails() {
           </DragDropContext>
           <Link
             to="/"
-            className="flex mt-4 bg-gradient text-white font-bold py-2 px-4 rounded hover:bg-mainColor transition-all duration-300 ease-out mx-auto max-w-[100px] justify-center"
+            className="mx-auto mt-4 flex max-w-[100px] justify-center rounded bg-gradient px-4 py-2 font-bold text-white transition-all duration-300 ease-out hover:bg-mainColor"
           >
             Go Back
           </Link>

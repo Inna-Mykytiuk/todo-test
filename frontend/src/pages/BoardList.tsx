@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchBoards,
-  createBoard,
-  updateBoard,
-  deleteBoard,
-} from "../store/board-slice";
-import { RootState, AppDispatch } from "../store/store";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import InputField from "../components/InputField";
+import { CiSaveDown1 } from "react-icons/ci";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoCreateOutline } from "react-icons/io5";
-import { CiSaveDown1 } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import InputField from "../components/InputField";
+import {
+  createBoard,
+  deleteBoard,
+  fetchBoards,
+  updateBoard,
+} from "../store/board-slice";
+import { AppDispatch, RootState } from "../store/store";
 
 const BoardList: React.FC = () => {
   const { boards, loading, error } = useSelector(
-    (state: RootState) => state.boards,
+    (state: RootState) => state.boards
   );
   const dispatch = useDispatch<AppDispatch>();
 
@@ -34,7 +35,7 @@ const BoardList: React.FC = () => {
   useEffect(() => {
     if (searchTerm.trim()) {
       const filtered = boards.filter((board) =>
-        board.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        board.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredBoards(filtered);
     } else {
@@ -77,7 +78,7 @@ const BoardList: React.FC = () => {
 
   const handleEditKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    id: string,
+    id: string
   ) => {
     if (e.key === "Enter") {
       handleUpdateBoard(id);
@@ -89,13 +90,13 @@ const BoardList: React.FC = () => {
   return (
     <>
       <header className="w-full bg-gradient py-[20px] shadow-lg">
-        <h1 className="text-4xl text-center text-white">Kanban Boards</h1>
+        <h1 className="text-center text-4xl text-white">Kanban Boards</h1>
       </header>
       <section className="w-full py-[50px]">
         <div className="container">
-          <div className="flex flex-col max-w-[500px] mx-auto gap-[20px]">
-            <div className="w-full flex flex-col gap-[20px] mb-[40px]">
-              <div className="flex w-full gap-4 justify-between">
+          <div className="mx-auto flex max-w-[500px] flex-col gap-[20px]">
+            <div className="mb-[40px] flex w-full flex-col gap-[20px]">
+              <div className="flex w-full justify-between gap-4">
                 <InputField
                   value={boardName}
                   onChange={(e) => setBoardName(e.target.value)}
@@ -106,13 +107,13 @@ const BoardList: React.FC = () => {
                   type="submit"
                   onClick={handleCreateBoard}
                   aria-label="Create Board"
-                  className="flex items-center justify-center w-[42px] h-[42px] p-2 text-gray-300 hover:border-mainBcg hover:text-mainBcg transition-all duration-300 ease-out rounded-full border-gray-300 border text-2xl shadow-input"
+                  className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-gray-300 p-2 text-2xl text-gray-300 shadow-input transition-all duration-300 ease-out hover:border-mainBcg hover:text-mainBcg"
                 >
                   <GoPlus />
                 </button>
               </div>
 
-              <div className="flex w-full gap-4 justify-between">
+              <div className="flex w-full justify-between gap-4">
                 <InputField
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -122,7 +123,7 @@ const BoardList: React.FC = () => {
                   type="button"
                   onClick={() => setSearchTerm("")}
                   aria-label="Clear Search"
-                  className="flex items-center justify-center w-[42px] h-[42px] p-2 text-gray-300 hover:border-mainBcg hover:text-mainBcg transition-all duration-300 ease-out rounded-full border-gray-300 border text-2xl shadow-input"
+                  className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-gray-300 p-2 text-2xl text-gray-300 shadow-input transition-all duration-300 ease-out hover:border-mainBcg hover:text-mainBcg"
                 >
                   <IoCloseOutline />
                 </button>
@@ -141,7 +142,7 @@ const BoardList: React.FC = () => {
               ? filteredBoards.map((board) => (
                   <div key={board._id} className="card-wrapper backlog-color">
                     {isEditing === board._id ? (
-                      <div className="w-full flex p-6 items-center gap-4">
+                      <div className="flex w-full items-center gap-4 p-6">
                         <InputField
                           value={updatedName}
                           onChange={(e) => setUpdatedName(e.target.value)}
@@ -153,7 +154,7 @@ const BoardList: React.FC = () => {
                             type="button"
                             onClick={() => handleUpdateBoard(board._id)}
                             aria-label="Save Board"
-                            className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 hover:text-mainBcg transition-all duration-300 ease-out text-4xl"
+                            className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
                           >
                             <CiSaveDown1 />
                           </button>
@@ -161,15 +162,15 @@ const BoardList: React.FC = () => {
                             type="button"
                             onClick={() => setIsEditing(null)}
                             aria-label="Cancel Edit"
-                            className="flex items-center justify-center w-[30px] h-[30px] text-gray-400 hover:text-red-400 transition-all duration-300 ease-out text-4xl"
+                            className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-red-400"
                           >
                             <IoCloseOutline />
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full flex flex-col p-6">
-                        <div className="flex justify-between items-center">
+                      <div className="flex w-full flex-col p-6">
+                        <div className="flex items-center justify-between">
                           <h3 className="text-xl font-bold">{board.name}</h3>
                           <div className="flex gap-4">
                             <button
@@ -179,7 +180,7 @@ const BoardList: React.FC = () => {
                                 setUpdatedName(board.name);
                               }}
                               aria-label="Edit Board"
-                              className="flex items-center justify-center w-[24px] h-[24px] text-gray-400 hover:text-mainBcg transition-all duration-300 ease-out text-2xl shadow-input"
+                              className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-mainBcg"
                             >
                               <IoCreateOutline />
                             </button>
@@ -187,7 +188,7 @@ const BoardList: React.FC = () => {
                               type="button"
                               onClick={() => handleDeleteBoard(board._id)}
                               aria-label="Delete Board"
-                              className="flex items-center justify-center w-[24px] h-[24px] text-gray-400 hover:text-red-400 transition-all duration-300 ease-out text-2xl shadow-input"
+                              className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-red-400"
                             >
                               <IoCloseOutline />
                             </button>
@@ -195,10 +196,10 @@ const BoardList: React.FC = () => {
                         </div>
                         <Link
                           to={`/boards/${board._id}`}
-                          className="group flex items-center gap-2 text-gray-400 text-base mt-4 hover:text-mainBcg transition-all duration-300 ease-out"
+                          className="group mt-4 flex items-center gap-2 text-base text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
                         >
                           Create Task
-                          <GoPlus className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out" />
+                          <GoPlus className="h-[24px] w-[24px] rounded-full border border-dashed border-gray-400 p-1 text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out group-hover:border-mainBcg group-hover:text-mainBcg" />
                         </Link>
                       </div>
                     )}

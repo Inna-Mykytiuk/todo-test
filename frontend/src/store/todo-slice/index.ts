@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSelector } from "reselect";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 import axios from "axios";
+import { createSelector } from "reselect";
 
 export interface Task {
   id: string;
@@ -29,18 +30,18 @@ export const fetchTasks = createAsyncThunk(
   "todo/fetchTasks",
   async (
     { boardId, columnId }: { boardId: string; columnId: string },
-    thunkAPI,
+    thunkAPI
   ) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`,
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`
       );
       return response.data;
     } catch (error) {
       console.error(error);
       return thunkAPI.rejectWithValue("Не вдалося отримати задачі");
     }
-  },
+  }
 );
 
 export const addTask = createAsyncThunk(
@@ -57,12 +58,12 @@ export const addTask = createAsyncThunk(
       title: string;
       description: string;
     },
-    thunkAPI,
+    thunkAPI
   ) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`,
-        { title, description },
+        { title, description }
       );
       console.log("Задача додана:", response.data);
       return response.data.task;
@@ -70,7 +71,7 @@ export const addTask = createAsyncThunk(
       console.error(error);
       return thunkAPI.rejectWithValue("Не вдалося додати задачу");
     }
-  },
+  }
 );
 
 export const updateTask = createAsyncThunk(
@@ -89,12 +90,12 @@ export const updateTask = createAsyncThunk(
       title?: string;
       description?: string;
     },
-    thunkAPI,
+    thunkAPI
   ) => {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
-        { title, description },
+        { title, description }
       );
       console.log("Задача оновлена:", response.data);
       return response.data.task;
@@ -102,7 +103,7 @@ export const updateTask = createAsyncThunk(
       console.error(error);
       return thunkAPI.rejectWithValue("Не вдалося оновити задачу");
     }
-  },
+  }
 );
 
 export const deleteTask = createAsyncThunk(
@@ -113,11 +114,11 @@ export const deleteTask = createAsyncThunk(
       columnId,
       taskId,
     }: { boardId: string; columnId: string; taskId: string },
-    thunkAPI,
+    thunkAPI
   ) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`
       );
       console.log("Задача видалена:", response.data);
       return taskId;
@@ -125,7 +126,7 @@ export const deleteTask = createAsyncThunk(
       console.error(error);
       return thunkAPI.rejectWithValue("Не вдалося видалити задачу");
     }
-  },
+  }
 );
 
 export const moveTask = createAsyncThunk(
@@ -142,10 +143,10 @@ export const moveTask = createAsyncThunk(
     destColumnId: string;
   }) => {
     const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${sourceColumnId}/tasks/${taskId}/move/${destColumnId}`,
+      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${sourceColumnId}/tasks/${taskId}/move/${destColumnId}`
     );
     return response.data;
-  },
+  }
 );
 
 export const moveTaskWithinColumn = createAsyncThunk(
@@ -162,10 +163,10 @@ export const moveTaskWithinColumn = createAsyncThunk(
     targetIndex: number;
   }) => {
     const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`,
+      `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/${columnId}/tasks/${taskId}/move/${targetIndex}`
     );
     return response.data;
-  },
+  }
 );
 
 const todoSlice = createSlice({
@@ -181,7 +182,7 @@ const todoSlice = createSlice({
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.loading[action.meta.arg.columnId] = false;
         const column = state.columns.find(
-          (col) => col.id === action.meta.arg.columnId,
+          (col) => col.id === action.meta.arg.columnId
         );
         if (column) {
           column.tasks = action.payload;
@@ -198,7 +199,7 @@ const todoSlice = createSlice({
       })
       .addCase(addTask.fulfilled, (state, action) => {
         const column = state.columns.find(
-          (col) => col.id === action.meta.arg.columnId,
+          (col) => col.id === action.meta.arg.columnId
         );
         if (column) {
           column.tasks.push(action.payload);
@@ -206,11 +207,11 @@ const todoSlice = createSlice({
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         const column = state.columns.find(
-          (col) => col.id === action.meta.arg.columnId,
+          (col) => col.id === action.meta.arg.columnId
         );
         if (column) {
           const taskIndex = column.tasks.findIndex(
-            (task) => task.id === action.meta.arg.taskId,
+            (task) => task.id === action.meta.arg.taskId
           );
           if (taskIndex !== -1) {
             column.tasks[taskIndex] = action.payload;
@@ -219,11 +220,11 @@ const todoSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         const column = state.columns.find(
-          (col) => col.id === action.meta.arg.columnId,
+          (col) => col.id === action.meta.arg.columnId
         );
         if (column) {
           column.tasks = column.tasks.filter(
-            (task) => task.id !== action.payload,
+            (task) => task.id !== action.payload
           );
         }
       })
@@ -231,13 +232,13 @@ const todoSlice = createSlice({
         const { sourceColumnId, destColumnId, task } = action.payload;
 
         const sourceColumn = state.columns.find(
-          (col) => col.id === sourceColumnId,
+          (col) => col.id === sourceColumnId
         );
         const destColumn = state.columns.find((col) => col.id === destColumnId);
 
         if (sourceColumn && destColumn) {
           sourceColumn.tasks = sourceColumn.tasks.filter(
-            (t) => t.id !== task.id,
+            (t) => t.id !== task.id
           );
           destColumn.tasks.push(task);
         }
@@ -264,7 +265,7 @@ export const selectError = (state: { todo: TodoState }) => state.todo.error;
 export const selectColumnTasks = createSelector(
   (state: { todos: TodoState }, columnId: string) =>
     state.todos.columns.find((col) => col.id === columnId),
-  (column) => column?.tasks || [],
+  (column) => column?.tasks || []
 );
 
 export default todoSlice.reducer;

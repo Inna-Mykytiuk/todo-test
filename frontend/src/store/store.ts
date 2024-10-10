@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import boardReducer from "./board-slice";
 import todosReducer from "./todo-slice";
 
