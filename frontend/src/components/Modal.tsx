@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { IoCloseOutline } from "react-icons/io5";
 import InputField from "./InputField";
 import TextArea from "./TextArea";
-import { IoCloseOutline } from "react-icons/io5";
 
 interface ModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   useEffect(() => {

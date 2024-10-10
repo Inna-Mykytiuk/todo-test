@@ -85,7 +85,8 @@ body::-webkit-scrollbar-thumb {
 }
 
 .backlog-color {
-  background-image: linear-gradient(#f6f8fc, #f6f8fc), radial-gradient(circle at top left, #c781ff, #e57373);
+  background-image: linear-gradient(#f6f8fc, #f6f8fc),
+    radial-gradient(circle at top left, #c781ff, #e57373);
 }
 
 .modal-overlay {

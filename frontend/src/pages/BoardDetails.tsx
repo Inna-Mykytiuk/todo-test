@@ -1,15 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchBoards, loadBoardsFromLocalStorage, setBoards } from '../store/board-slice';
-import type { RootState, AppDispatch } from "../store/store";
-import { Board } from '../store/board-slice';
-import TaskList from '../components/TaskList';
-import Modal from '../components/Modal';
-import { addTask, moveTask as moveTaskAction, fetchTasks, moveTaskWithinColumn } from '../store/todo-slice';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+
 import { GoPlus } from "react-icons/go";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+
+import {
+  fetchBoards,
+  loadBoardsFromLocalStorage,
+  setBoards,
+} from "../store/board-slice";
+import type { RootState, AppDispatch } from "../store/store";
+import {
+  addTask,
+  moveTask as moveTaskAction,
+  fetchTasks,
+  moveTaskWithinColumn,
+} from "../store/todo-slice";
+import { Board } from "../store/board-slice";
+
+import TaskList from "../components/TaskList";
+import Modal from "../components/Modal";
 
 export default function BoardDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +33,7 @@ export default function BoardDetails() {
   const [currentColumnId, setCurrentColumnId] = useState<string | null>(null);
 
   const board = useSelector((state: RootState) =>
-    state.boards.boards.find((b: Board) => b._id === boardId)
+    state.boards.boards.find((b: Board) => b._id === boardId),
   );
 
   useEffect(() => {
@@ -49,7 +62,9 @@ export default function BoardDetails() {
 
   const handleSaveTask = async (title: string, description: string) => {
     if (currentColumnId) {
-      await dispatch(addTask({ boardId, columnId: currentColumnId, title, description }));
+      await dispatch(
+        addTask({ boardId, columnId: currentColumnId, title, description }),
+      );
     }
     handleCloseModal();
   };
@@ -66,23 +81,27 @@ export default function BoardDetails() {
     const taskId = result.draggableId;
 
     if (destination.droppableId === source.droppableId) {
-      await dispatch(moveTaskWithinColumn({
-        boardId,
-        columnId: sourceColumnId,
-        taskId,
-        targetIndex: destination.index
-      }));
+      await dispatch(
+        moveTaskWithinColumn({
+          boardId,
+          columnId: sourceColumnId,
+          taskId,
+          targetIndex: destination.index,
+        }),
+      );
     } else {
-      await dispatch(moveTaskAction({
-        boardId,
-        sourceColumnId,
-        destColumnId,
-        taskId
-      }));
+      await dispatch(
+        moveTaskAction({
+          boardId,
+          sourceColumnId,
+          destColumnId,
+          taskId,
+        }),
+      );
     }
 
-    const updatedColumns = [sourceColumnId, destColumnId].map(columnId =>
-      dispatch(fetchTasks({ boardId, columnId }))
+    const updatedColumns = [sourceColumnId, destColumnId].map((columnId) =>
+      dispatch(fetchTasks({ boardId, columnId })),
     );
 
     await Promise.all(updatedColumns);
@@ -93,7 +112,9 @@ export default function BoardDetails() {
       <header className="w-full bg-gradient py-[20px] shadow-lg">
         <h1 className="text-4xl text-center text-white">{board.name} Board</h1>
         {localBoards.length > 0 && (
-          <h2 className="text-xl text-center text-white mt-4 hidden">Local Boards Loaded</h2>
+          <h2 className="text-xl text-center text-white mt-4 hidden">
+            Local Boards Loaded
+          </h2>
         )}
       </header>
       <section className="w-full py-[50px] flex-grow min-h-screen">
@@ -102,7 +123,7 @@ export default function BoardDetails() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {board.columns.map((column) => (
                 <div key={column._id} className="card-wrapper backlog-color">
-                  <div className='w-full h-full flex flex-col p-6 gap-4 justify-between'>
+                  <div className="w-full h-full flex flex-col p-6 gap-4 justify-between">
                     <div className="max-h-[600px] overflow-y-auto smooth  scroll-smooth">
                       <h2 className="text-xl font-bold mb-2">{column.title}</h2>
                       <TaskList columnId={column._id} boardId={boardId} />
@@ -114,21 +135,23 @@ export default function BoardDetails() {
                       className="justify-center group flex items-center gap-2 text-gray-400 text-base mt-4 hover:text-mainBcg transition-all duration-300 ease-out"
                     >
                       Add Task
-                      <GoPlus
-                        className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out"
-                      />
+                      <GoPlus className="w-[24px] h-[24px] p-1 text-gray-400 group-hover:text-mainBcg rounded-full border border-dashed border-gray-400 group-hover:border-mainBcg text-2xl shadow-input transition-all duration-300 ease-out" />
                     </button>
                   </div>
                 </div>
               ))}
-              <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveTask} />
+              <Modal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={handleSaveTask}
+              />
             </div>
           </DragDropContext>
-          <Link to="/"
+          <Link
+            to="/"
             className="flex mt-4 bg-gradient text-white font-bold py-2 px-4 rounded hover:bg-mainColor transition-all duration-300 ease-out mx-auto max-w-[100px] justify-center"
           >
             Go Back
-
           </Link>
         </div>
       </section>

@@ -36,10 +36,10 @@ export const fetchBoards = createAsyncThunk<Board[]>(
   "boards/fetchBoards",
   async () => {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/boards`
+      `${import.meta.env.VITE_API_URL}/api/boards`,
     );
     return response.data;
-  }
+  },
 );
 
 export const createBoard = createAsyncThunk<Board, string>(
@@ -49,10 +49,10 @@ export const createBoard = createAsyncThunk<Board, string>(
       `${import.meta.env.VITE_API_URL}/api/boards`,
       {
         name,
-      }
+      },
     );
     return response.data;
-  }
+  },
 );
 
 export const updateBoard = createAsyncThunk<
@@ -63,7 +63,7 @@ export const updateBoard = createAsyncThunk<
     `${import.meta.env.VITE_API_URL}/api/boards/${id}`,
     {
       name,
-    }
+    },
   );
   return response.data;
 });
@@ -82,7 +82,7 @@ export const deleteBoard = createAsyncThunk<string, string>(
       console.error("Error deleting board:", error);
       throw error;
     }
-  }
+  },
 );
 
 const boardSlice = createSlice({
@@ -98,7 +98,7 @@ const boardSlice = createSlice({
     },
     updateLocalBoard: (
       state,
-      action: PayloadAction<{ id: string; name: string }>
+      action: PayloadAction<{ id: string; name: string }>,
     ) => {
       const { id, name } = action.payload;
       const index = state.boards.findIndex((b) => b._id === id);
@@ -108,7 +108,7 @@ const boardSlice = createSlice({
     },
     deleteLocalBoard: (state, action: PayloadAction<string>) => {
       state.boards = state.boards.filter(
-        (board) => board._id !== action.payload
+        (board) => board._id !== action.payload,
       );
     },
   },
@@ -124,7 +124,7 @@ const boardSlice = createSlice({
           state.loading = false;
           state.boards = action.payload;
           localStorage.setItem("boards", JSON.stringify(action.payload));
-        }
+        },
       )
       .addCase(fetchBoards.rejected, (state, action) => {
         state.loading = false;
@@ -146,10 +146,10 @@ const boardSlice = createSlice({
         deleteBoard.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.boards = state.boards.filter(
-            (board) => board._id !== action.payload
+            (board) => board._id !== action.payload,
           );
           localStorage.setItem("boards", JSON.stringify(state.boards));
-        }
+        },
       );
   },
 });
