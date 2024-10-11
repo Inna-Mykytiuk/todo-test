@@ -65,7 +65,7 @@ export const addTask = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks`,
         { title, description }
       );
-      console.log("Задача додана:", response.data);
+      // console.log("Задача додана:", response.data);
       return response.data.task;
     } catch (error) {
       console.error(error);
@@ -97,7 +97,7 @@ export const updateTask = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/api/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         { title, description }
       );
-      console.log("Задача оновлена:", response.data);
+      // console.log("Задача оновлена:", response.data);
       return response.data.task;
     } catch (error) {
       console.error(error);
