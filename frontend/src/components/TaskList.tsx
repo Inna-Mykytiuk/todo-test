@@ -8,7 +8,8 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 
 import type { AppDispatch, RootState } from "../store/store";
 import { deleteTask, fetchTasks, updateTask } from "../store/todo-slice";
-import { addTask, selectColumnTasks } from "../store/todo-slice";
+import { addTask } from "../store/todo-slice";
+import { selectColumnTasks } from "@/store/selectors";
 import type { Task } from "../store/todo-slice";
 import Modal from "./Modal";
 

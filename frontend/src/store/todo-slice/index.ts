@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
-import { createSelector } from "reselect";
 
 export interface Task {
   id: string;
@@ -14,7 +13,7 @@ export interface Column {
   tasks: Task[];
 }
 
-interface TodoState {
+export interface TodoState {
   columns: Column[];
   loading: Record<string, boolean>;
   error: Record<string, string | null>;
@@ -257,15 +256,5 @@ const todoSlice = createSlice({
       });
   },
 });
-
-export const selectColumns = (state: { todo: TodoState }) => state.todo.columns;
-export const selectLoading = (state: { todo: TodoState }) => state.todo.loading;
-export const selectError = (state: { todo: TodoState }) => state.todo.error;
-
-export const selectColumnTasks = createSelector(
-  (state: { todos: TodoState }, columnId: string) =>
-    state.todos.columns.find((col) => col.id === columnId),
-  (column) => column?.tasks || []
-);
 
 export default todoSlice.reducer;
