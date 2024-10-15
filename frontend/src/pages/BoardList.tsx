@@ -140,72 +140,72 @@ const BoardList: React.FC = () => {
 
             {filteredBoards.length > 0
               ? filteredBoards.map((board) => (
-                  <div key={board._id} className="card-wrapper backlog-color">
-                    {isEditing === board._id ? (
-                      <div className="flex w-full items-center gap-4 p-6">
-                        <InputField
-                          value={updatedName}
-                          onChange={(e) => setUpdatedName(e.target.value)}
-                          onKeyDown={(e) => handleEditKeyDown(e, board._id)}
-                          placeholder="Enter board name"
-                        />
-                        <div className="flex items-center">
+                <div key={board._id} className="card-wrapper backlog-color">
+                  {isEditing === board._id ? (
+                    <div className="flex w-full items-center gap-4 p-6">
+                      <InputField
+                        value={updatedName}
+                        onChange={(e) => setUpdatedName(e.target.value)}
+                        onKeyDown={(e) => handleEditKeyDown(e, board._id)}
+                        placeholder="Enter board name"
+                      />
+                      <div className="flex items-center">
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateBoard(board._id)}
+                          aria-label="Save Board"
+                          className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
+                        >
+                          <CiSaveDown1 />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsEditing(null)}
+                          aria-label="Cancel Edit"
+                          className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-red-400"
+                        >
+                          <IoCloseOutline />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex w-full flex-col p-6">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-bold">{board.name}</h3>
+                        <div className="flex gap-4">
                           <button
                             type="button"
-                            onClick={() => handleUpdateBoard(board._id)}
-                            aria-label="Save Board"
-                            className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
+                            onClick={() => {
+                              setIsEditing(board._id);
+                              setUpdatedName(board.name);
+                            }}
+                            aria-label="Edit Board"
+                            className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-mainBcg"
                           >
-                            <CiSaveDown1 />
+                            <IoCreateOutline />
                           </button>
                           <button
                             type="button"
-                            onClick={() => setIsEditing(null)}
-                            aria-label="Cancel Edit"
-                            className="flex h-[30px] w-[30px] items-center justify-center text-4xl text-gray-400 transition-all duration-300 ease-out hover:text-red-400"
+                            onClick={() => handleDeleteBoard(board._id)}
+                            aria-label="Delete Board"
+                            className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-red-400"
                           >
                             <IoCloseOutline />
                           </button>
                         </div>
                       </div>
-                    ) : (
-                      <div className="flex w-full flex-col p-6">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xl font-bold">{board.name}</h3>
-                          <div className="flex gap-4">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setIsEditing(board._id);
-                                setUpdatedName(board.name);
-                              }}
-                              aria-label="Edit Board"
-                              className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-mainBcg"
-                            >
-                              <IoCreateOutline />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteBoard(board._id)}
-                              aria-label="Delete Board"
-                              className="flex h-[24px] w-[24px] items-center justify-center text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out hover:text-red-400"
-                            >
-                              <IoCloseOutline />
-                            </button>
-                          </div>
-                        </div>
-                        <Link
-                          to={`/boards/${board._id}`}
-                          className="group mt-4 flex items-center gap-2 text-base text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
-                        >
-                          Create Task
-                          <GoPlus className="h-[24px] w-[24px] rounded-full border border-dashed border-gray-400 p-1 text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out group-hover:border-mainBcg group-hover:text-mainBcg" />
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                ))
-              : !loading && <p className="text-red-500">No boards available</p>}
+                      <Link
+                        to={`/boards/${board._id}`}
+                        className="group mt-4 flex items-center gap-2 text-base text-gray-400 transition-all duration-300 ease-out hover:text-mainBcg"
+                      >
+                        Create Task
+                        <GoPlus className="h-[24px] w-[24px] rounded-full border border-dashed border-gray-400 p-1 text-2xl text-gray-400 shadow-input transition-all duration-300 ease-out group-hover:border-mainBcg group-hover:text-mainBcg" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))
+              : !loading && <p className="text-red-500">No boards available...Please create New Board</p>}
           </div>
         </div>
       </section>
